@@ -1,0 +1,11 @@
+extend _layout
+
+block content
+  div.active Bonjour tout le monde
+  div(class="active" style="font-weight:bold") Bonjour tout le monde
+  .active
+    p Bonjour tout le monde
+    span test
+
+    each label in labels
+      div= label._id + ' ' + label.data.toto + ' ' + label.data.messages.errors.not_found

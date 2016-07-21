@@ -1,0 +1,15 @@
+//- Page camping
+//- ==============
+
+extend ../_layout
+
+block content
+  p.
+    Ceci est une page d'erreur
+  div= msg
+  div #{msg}
+  div sdfsdfsdf
+
+  - console.log('cote serveur')
+  script.
+   console.log('cote client')
