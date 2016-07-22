@@ -2,7 +2,14 @@ doctype html
 html
   head
     link(rel='stylesheet', href='/tradjs.1.0.0.css')
-  body
-    block content
-
+body
     script(src='/tradjs.1.0.0.js')
+    header
+      h1 My Site
+    .container
+      .main-content
+        block content
+      .sidebar
+        block sidebar
+    footer
+      p Running on node with Express, Jade and Stylus
