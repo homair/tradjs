@@ -1,14 +1,28 @@
 extend _layout
 
 block content
-
+  -
+   label = labels[0].data
   table
-    mixin azerty(label)
+    thead
       tr
-        each data in label.data
-          td= data
+        td.
+          Clés
+        td.
+          Anglais
+        td.
+          Français
+    each label1, index in labels[1].data
+      tr
+        td
+          input.form-control(type='text', value= index)
+        td
+          input.form-control(id='doc0' type='text', value= label[index])
+        td
+          input.form-control(id='doc1' type='text', value= label1)
+
+  div
+    button.modif(id='mod' type="submit") Modifier
 
 
 
-    each label in labels
-      +azerty(label)

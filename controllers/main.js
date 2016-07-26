@@ -10,6 +10,12 @@ const router = new Router()
 // Update d'un label
 // -------------------------------------------------
 router.post('/update', (req, res) => {
+  console.log(req.query.modif1)
+  console.log(req.query.modif2)
+
+  getDb().collection('i18next').updateOne({'language': 'en'}, {$set: { 'data.toto': req.query.modif1 }})
+  getDb().collection('i18next').updateOne({'language': 'fr'}, {$set: { 'data.toto': req.query.modif2 }})
+
   res.json({msg: 'Updated !'})
 })
 
@@ -34,7 +40,7 @@ router.get('/', (req, res) => {
     }
 
     console.log('i18next labels='.yellow, labels)
-    res.render('index', {labels: labels})
+    res.render('index', {'labels': labels})
   })
 })
 
