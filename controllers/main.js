@@ -10,13 +10,12 @@ const router = new Router()
 // Update d'un label
 // -------------------------------------------------
 router.post('/update', (req, res) => {
-  console.log(req.query.modif1)
-  console.log(req.query.modif2)
+  console.log(req.body)
 
-  getDb().collection('i18next').updateOne({'language': 'en'}, {$set: { 'data.toto': req.query.modif1 }})
-  getDb().collection('i18next').updateOne({'language': 'fr'}, {$set: { 'data.toto': req.query.modif2 }})
+  getDb().collection('i18next').updateOne({'language': 'fr'}, {$set: {'data.toto': req.body.modif1}})
+  // getDb().collection('i18next').updateOne({'language': 'fr'}, {$set: {'data': req.query.modif1}})
 
-  res.json({msg: 'Updated !'})
+  res.send('ok')
 })
 
 // -------------------------------------------------
