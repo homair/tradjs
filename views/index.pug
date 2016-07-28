@@ -3,6 +3,7 @@ extend _layout
 block content
   -
    label = labels[0].data
+    msg = labels[0].data.messages.errors
   table
     thead
       tr
@@ -13,12 +14,12 @@ block content
         td.
           Anglais
     each label1, index in labels[1].data
+      if index == "messages"
+          - index = 'messages.errors.not_found'
       tr
         td
-          input.form-control(id='index' type='text', value= index)
+          input.form-control(id='index', type='text', value= index)
         td
-          input.form-control(id='doc0' type='text', value= label[index])
+          input.form-control(id='doc0'+index, type='text', value= label[index], data-key='data.'+index, data-lang='fr')
         td
-          input.form-control(id='doc1' type='text', value= label1)
-  div
-   button.modif(id='mod' type="submit") Modifier
+          input.form-control(id='doc1'+index, type='text', value= label1, data-key='data.'+index, data-lang='en')

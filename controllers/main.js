@@ -12,8 +12,7 @@ const router = new Router()
 router.post('/update', (req, res) => {
   console.log(req.body)
 
-  getDb().collection('i18next').updateOne({'language': 'fr'}, {$set: {'data.toto': req.body.modif1}})
-  // getDb().collection('i18next').updateOne({'language': 'fr'}, {$set: {'data': req.query.modif1}})
+  getDb().collection('i18next').updateOne({'language': req.body.language}, {$set: {[req.body.key]: req.body.value}})
 
   res.send('ok')
 })
