@@ -1,25 +1,28 @@
 extend _layout
 
 block content
-  -
-   label = labels[0].data
-    msg = labels[0].data.messages.errors
-  table
-    thead
-      tr
-        td.
-          Clés
-        td.
-          Français
-        td.
-          Anglais
-    each label1, index in labels[1].data
-      if index == "messages"
-          - index = 'messages.errors.not_found'
-      tr
-        td
-          input.form-control(id='index', type='text', value= index)
-        td
-          input.form-control(id='doc0'+index, type='text', value= label[index], data-key='data.'+index, data-lang='fr')
-        td
-          input.form-control(id='doc1'+index, type='text', value= label1, data-key='data.'+index, data-lang='en')
+  mixin parseObject(obj, AffichageCle)
+      each val, key in obj
+        if typeof val === 'string'
+          if AffichageCle === true
+            table
+              tr
+                td
+                  input.form-control(id="key", type='text', value=key)
+                td
+                  input.form-control(id='fr', type='text', value=val)
+          else
+            table
+              tr
+                td
+                  input.form-control(id='en', type='text', value=val)
+        else if typeof val === 'object'
+          +parseObject(val, AffichageCle)
+
+  each doc in docs
+    - var AffichageCle = doc.language === 'fr'
+    +parseObject(doc.data, AffichageCle)
+
+
+
+
