@@ -1,27 +1,19 @@
 extend _layout
 
 block content
-  mixin parseObject(obj, AffichageCle)
-      each val, key in obj
-        if typeof val === 'string'
-          if AffichageCle === true
-            table
-              tr
-                td
-                  input.form-control(id="key", type='text', value=key)
-                td
-                  input.form-control(id='fr', type='text', value=val)
-          else
-            table
-              tr
-                td
-                  input.form-control(id='en', type='text', value=val)
-        else if typeof val === 'object'
-          +parseObject(val, AffichageCle)
+  table
+     thead
+        tr
+          td= clé
+          each val in listeLang
+            td= val
 
-  each doc in docs
-    - var AffichageCle = doc.language === 'fr'
-    +parseObject(doc.data, AffichageCle)
+          each val, key in objetFinale
+            tr
+              td
+                input.form-control(id='key', type='text', value=key)
+              td
+                input.form-control(id='fr', type='text', value=val, data-key='data.'+key, data-lang='fr')
 
 
 
