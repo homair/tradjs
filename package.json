@@ -59,7 +59,8 @@
     "pug": "^2.0.0-beta3",
     "resolve-url-loader": "^1.6.0",
     "sass-loader": "^4.0.0",
-    "style-loader": "^0.13.1"
+    "style-loader": "^0.13.1",
+    "lodash": "^4.2.0"
   },
   "devDependencies": {
     "ab-tool": "^0.2.0",

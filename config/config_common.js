@@ -3,5 +3,10 @@ export default {
   db: {
     mongodb: process.env.MONGODB_URL || 'mongodb://localhost/honodb'
   },
-  langs: {'fr': 'Français', 'en': 'Anglais'}
+  langs: {
+    'fr': { 'label': 'Français',
+    'order': 0},
+    'en': { 'label': 'Anglais',
+    'order': 1}
+  }
 }

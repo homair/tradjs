@@ -4,16 +4,19 @@ block content
   table
      thead
         tr
-          td= clé
+          td.
+           clé
           each val in listeLang
-            td= val
+            td= val.label
 
-          each val, key in objetFinale
-            tr
-              td
-                input.form-control(id='key', type='text', value=key)
-              td
-                input.form-control(id='fr', type='text', value=val, data-key='data.'+key, data-lang='fr')
+
+        each val, key in objetFinale.fr
+          tr
+            td
+              input.form-control(id='key', type='text', value=key)
+              each lang, keyLang in listeLang
+                td
+                  input.form-control(id=keyLang, type='text', value=objetFinale[keyLang][key], data-key='data.'+key, data-lang=keyLang)
 
 
 
