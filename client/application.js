@@ -19,4 +19,16 @@ $(document).ready(function () {
 
     })
   })
+  $('button[type="button"]').on('click', function () {
+    $.ajax({
+      type: 'DELETE',
+      url: 'http://localhost:3000/delete',
+      data: {'key': $('input[data1= "col1"]').attr('id'), 'value': $('input[data2= "col2"]').val()},
+      timeout: 3000,
+      uccess: function (data) {
+        alert(data)
+      },
+      error: function () { alert("La requête n'a pas aboutit") }
+    })
+  })
 })

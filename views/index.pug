@@ -13,11 +13,9 @@ block content
         each val, key in objetFinale.fr
           tr
             td
-              input.form-control(id='key', type='text', value=key)
+              input.form-control(id='data.'+key, type='text', value=key, data1= "col1")
+              button.btn.btn-danger(id='fr1', type="button", value='Supprimer') Supprimer
+
               each lang, keyLang in listeLang
                 td
-                  input.form-control(id=keyLang, type='text', value=objetFinale[keyLang][key], data-key='data.'+key, data-lang=keyLang)
-
-
-
-
+                  input.form-control(id=keyLang, type='text', value=objetFinale[keyLang][key], data-key='data.'+key, data-lang=keyLang,data2= 'col2')
