@@ -1,11 +1,10 @@
 // Contrôleur principal
 import { Router } from 'express'
 import httpErrorController from './httpErrors'
-import { getDb } from '../lib/mongodb_util'
-import $ from 'jquery'
 import config from '../config/'
 import 'colors'
-import _ from 'lodash'
+import { getOrderedDocs, updateRoute, deleteRoute } from '../lib/manageDocs'
+
 // routeur Express
 const router = new Router()
 
@@ -14,22 +13,41 @@ const router = new Router()
 // -------------------------------------------------
 router.post('/update', (req, res) => {
   console.log(req.body)
-
-  getDb().collection('i18next').updateOne({'language': req.body.language}, {$set: {[req.body.key]: req.body.value}})
-
-  res.send('ok' + req.body.key)
+  if (typeof req.body.key === 'undefined' || typeof req.body.value === 'undefined' || typeof req.body.language === 'undefined') {
+    console.error('Des datas sont manquantes')
+    res.status(500).json({msg: 'Des paramètres sont manquants'})
+  } else {
+    updateRoute(req, res)
+  }
 })
 
 // -------------------------------------------------
 // Suppression d'un label
 // -------------------------------------------------
 router.delete('/delete', (req, res) => {
-  console.log(req.body)
-  //  console.log('[config.langs] ' , [config.langs])
-  for (let lang in config.langs) {
-    getDb().collection('i18next').updateOne({'language': lang}, {$unset: {[req.body.key]: req.body.value}})
+  // console.log(req.body)
+  if (typeof req.body.key === 'undefined') {
+    console.error('main.js, delete: des paramètres sont manquants')
+    res.status(500).json({msg: 'Des paramètres sont manquants'})
+  } else {
+    deleteRoute(req, res)
   }
-  res.send('clé supprimé')
+})
+
+// Recup d'un document
+router.get('/doc_by_language/:lang', (req, res) => {
+  // console.log(req.params)
+
+  const myLanguageConfig = {[req.params.lang]: config.langs[req.params.lang]}
+
+  getOrderedDocs(myLanguageConfig, function (err, params) {
+    if (err) {
+      console.error('main.js, doc_by_language:', err)
+      return res.status(500).json(err)
+    }
+    // console.log(params)
+    res.json(params)
+  })
 })
 
 // -------------------------------------------------
@@ -38,17 +56,18 @@ router.delete('/delete', (req, res) => {
 router.get('/', (req, res) => {
   // console.log(req.query)
 
-  getOrderedDocs(config.langs, function (params) {
+  getOrderedDocs(config.langs, function (err, params) {
     // console.log(params)
 
-    if (params.err) {
-      console.error('main.js:', params.err)
-      return res.render('errors/500', {msg: params.err})
+    if (err) {
+      console.error('main.js:', err)
+      return res.render('errors/500', err)
     }
 
     // ------------------------------------------------
     // Envoi des informations désirées côté client
     // ------------------------------------------------
+    // res.render('index')
     res.render('index', params)
   })
 // console.log('params ', params)
@@ -58,60 +77,3 @@ router.get('/', (req, res) => {
 router.use(httpErrorController)
 
 export default router
-
-function parseSimpleObject (obj, objReturn, keyPath) {
-  for (let element in obj) {
-    if (typeof obj[element] === 'string') {
-      objReturn[keyPath + element] = obj[element]
-    } else if (typeof obj[element] === 'object') {
-      keyPath = keyPath + element + '.'
-
-      parseSimpleObject(obj[element], objReturn, keyPath)
-    }
-  }
-}
-/**
- * [getOrderedDocs description]
- * @param  {[type]}   langs    [description]
- * @param  {Function} callback [description]
- * @return {Object}            [description]
- */
-function getOrderedDocs (langs, callback) {
-  // Recupère l'ensemble des documents de la collection "i18next" en fonction de la langue défini dans la config.
-  getDb().collection('i18next').find({'language': {$in: [...Object.keys(langs)]}}).toArray((err, docs) => {
-    if (err) {
-      callback({'err': err})
-    }
-    // -----------------------------------------------------------------------------------------------
-    // Fonction qui tri les documents sortis de la base de données : Fr en premier, puis anglais etc...
-    // -----------------------------------------------------------------------------------------------
-    let ordDoc = _.sortBy(docs, function (o) {
-      return langs[o.language].order
-    })
-    console.log('i18nex ordDoc='.yellow, ordDoc)
-
-    // ----------------------------------------------------
-    // Mise en place des labels pour le header du template
-    // ----------------------------------------------------
-    let listeLang = langs
-    // ------------------------------------------------------------------------------------
-    // Affichage des documents côté serveur selon nos besoins (clé|valFR|valEN|...etc)
-    // ------------------------------------------------------------------------------------
-    let objetFinale = {}
-    ordDoc.forEach((doc, index) => {
-      let objReturn = {}
-
-      for (let cle in doc.data) {
-        let keyPath = cle + '.'
-        if (typeof doc.data[cle] === 'string') {
-          objReturn[cle] = doc.data[cle]
-        } else {
-          parseSimpleObject(doc.data[cle], objReturn, keyPath)
-        }
-        objetFinale[doc.language] = objReturn
-      }
-    })
-
-    callback({'objetFinale': objetFinale, 'listeLang': listeLang})
-  })
-}

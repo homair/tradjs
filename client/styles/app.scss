@@ -18,10 +18,45 @@ tr
 }
 input
 {
-display: inline
+  text-align: center
 }
 button
 {
+text-align: center
+
+}
+.title{
+text-align: center
+}
+.class
+{
+  background-color: lightgreen;
+}
+.class1
+{
+  background-color : white;
+    -webkit-transition-property:  background-color;
+    -webkit-transition-duration:  2s;
+    -webkit-transition-timing-function : ease;
+    transition-property:  background-color;
+    transition-duration:  2s;
+    transition-timing-function : ease;
+  }
+
+.champ
+{
+    width:120px;
 }
 
+.table-sortable tbody tr {
+    cursor: move;
+}
 
+.color
+{
+  background-color:#4d88ff;
+}
+.cross
+{
+  color:#ff0000
+}

@@ -7,6 +7,14 @@ export default {
     'fr': { 'label': 'Français',
     'order': 0},
     'en': { 'label': 'Anglais',
-    'order': 1}
+    'order': 1},
+    'de': {'label': 'Allemand',
+    'order': 2},
+    'es': {'label': 'Espagnol',
+    'order': 3},
+    'it': {'label': 'Italien',
+    'order': 4},
+    'nl': {'label': 'Hollandais',
+    'order': 5}
   }
 }

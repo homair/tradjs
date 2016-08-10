@@ -4,31 +4,39 @@ import './styles/app.scss'
 
 $(document).ready(function () {
   $('input[type="text"]').on('blur', function () {
+    const val = $(this)
     $.ajax({
       type: 'POST',
       url: 'http://localhost:3000/update',
       data: {'key': $(this).attr('data-key'), 'value': $(this).val(), 'language': $(this).attr('data-lang')},
       timeout: 3000,
       success: function (data) {
-        if (data === 'ok') {
-          $('input').attr(data).css('background-color', 'lightgreen')
-          console.log($(this))
-        }
+        console.log(data)
+        val.addClass('class')
+        window.setTimeout(function () { val.addClass('class1') }, 10)
+        val.removeClass('class')
       },
       error: function () { alert("La requête n'a pas aboutit") }
 
     })
   })
   $('button[type="button"]').on('click', function () {
-    $.ajax({
-      type: 'DELETE',
-      url: 'http://localhost:3000/delete',
-      data: {'key': $('input[data1= "col1"]').attr('id'), 'value': $('input[data2= "col2"]').val()},
-      timeout: 3000,
-      uccess: function (data) {
-        alert(data)
-      },
-      error: function () { alert("La requête n'a pas aboutit") }
-    })
+    if (confirm('Voulez-vous vraiment supprimer cette clé?')) { // Clic sur OK
+      const key = $(this).data('inputkey')
+      $.ajax({
+        type: 'DELETE',
+        url: 'http://localhost:3000/delete',
+        data: {'key': key},
+        timeout: 3000,
+        success: function (data) {
+          console.log(data)
+          removeLine(key.replace(/\./gi, '-'))
+          function removeLine (string) {
+            $('#row_' + string).remove()
+          }
+        },
+        error: function () { alert("La requête n'a pas aboutit") }
+      })
+    }
   })
 })
