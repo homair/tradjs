@@ -10,18 +10,36 @@ describe('Library test', () => {
   describe('when parsing objects', () => {
 
     it('should return an object with the specifies of the function parseSimpleObject', (done) => {
-      let obj = { 'testa': { 'azea': { 'test': 'montest' } } }
+      let obj = {data: {
+          'A': {
+            'A1': {
+              'A11': 'value'
+            },
+            'A2': {
+              'A21': 'value',
+              'A22': 'value'
+            }
+          },
+          'B': {
+            'B1': {
+              'B11': 'value'
+            }
+          }
+        }
+      }
       let objReturn = {}
-      let keyPath = ''
-      parseSimpleObject(obj, objReturn, keyPath)
+      // console.log(Object.keys(obj))
+      parseSimpleObject(obj, 'data', '', objReturn)
       console.log('objReturn ', objReturn)
-      expect(objReturn).to.have.property('testa.azea.test', 'montest')
+      expect(objReturn).to.have.property('data.A.A1.A11', 'value')
+      expect(objReturn).to.have.property('data.A.A2.A21', 'value')
+      expect(objReturn).to.have.property('data.A.A2.A22', 'value')
+      expect(objReturn).to.have.property('data.B.B1.B11', 'value')
       done()
     })
   })
 
   describe('when ordering docs', () => {
-
     it('should return the contents of the database sorted and displayed  ', (done) => {
 
       getOrderedDocs(config.langs, function (err, params) {

@@ -1,24 +1,41 @@
 table
 {
-    border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
-    margin: auto;
+  border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
+  margin: auto;
 }
 thead
 {
   font-weight:bold;
 }
+
+tbody {
+  th {
+    font-size: 12px;
+  }
+
+  tr{
+     &:hover{
+      cursor: pointer;
+     }
+  }
+}
+
 td
 {
-    text-align: center;
-    border: 1px solid black;
+  text-align: center;
+  border: 1px solid black;
 }
 tr
 {
- margin: auto;
+  margin: auto;
 }
+
+
+
 input
 {
-  text-align: center
+  text-align: center;
+
 }
 button
 {
@@ -45,11 +62,11 @@ text-align: center
 
 .champ
 {
-    width:120px;
+  width:500px;
+  position: absolute;
 }
-
 .table-sortable tbody tr {
-    cursor: move;
+  cursor: move;
 }
 
 .color
@@ -58,5 +75,14 @@ text-align: center
 }
 .cross
 {
-  color:#ff0000
+  color:#ff1a1a
+}
+
+.found
+{
+  border: 1px red solid;
+}
+.found2
+{
+  color: red;
 }
