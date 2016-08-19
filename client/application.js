@@ -13,16 +13,19 @@ $(document).ready(function () {
   // ----------------------------------------------------------------------------------
   // Mise en place de la modal au clic sur une ligne
   // ----------------------------------------------------------------------------------
-  $('.line').on('click', function () {
-    const $this = $(this)
-    editedId = $this.data('key')
+  $('.modTrig').on('click', function () {
+    const $tr = $(this).closest('tr')
+    editedId = $tr.data('key')
 
     $('#myModal').modal('show')
-    $('.modal-title').html('Clé : ' + $this.data('key'))
-    $this.find('textarea').each(function () {
+    $('.modal-title').html('Clé : ' + $tr.data('key'))
+    $tr.find('textarea').each(function () {
       const lang = $(this).data('lang')
       $('.modal-body .form-group[data-lang="' + lang + '"]').append($(this))
     })
+  })
+  $('#myModal').on('shown.bs.modal', function () {
+    $('textarea[data-lang="fr"]', $(this)).focus()
   })
 
   $('#myModal').on('hidden.bs.modal', function () {
@@ -31,6 +34,7 @@ $(document).ready(function () {
       $('tr[data-key="' + editedId + '"] td[data-lang="' + lang + '"]').append($(this))
     })
   })
+
   // ----------------------------------------------------------------------------------
   // Requete Ajax pour le update des valeurs
   // ----------------------------------------------------------------------------------
@@ -59,6 +63,7 @@ $(document).ready(function () {
         })
       }
     })
+
   // ----------------------------------------------------------------------------------
   // Requete Ajax pour le delete des clées
   // ----------------------------------------------------------------------------------
@@ -81,6 +86,7 @@ $(document).ready(function () {
       })
     }
   })
+
   // -------------------------------------------------------------------------------
   // Mise en place de la recherche
   // -------------------------------------------------------------------------------
@@ -93,6 +99,7 @@ $(document).ready(function () {
       recherche(search)
     }
   })
+  $('input.search').focus()
   // ----------------------------------------------------------------------------
   // Thead en float pour le scrolling
   // ----------------------------------------------------------------------------

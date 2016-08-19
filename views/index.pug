@@ -2,15 +2,15 @@ extend _layout
 
 block content
   #myModal.modal.fade
-    .modal-dialog
+    .modal-dialog.modal-lg
       .modal-content
         .modal-header
-          h4.modal-title.
+          h4.modal-title
         .modal-body
           each lang, keyLang in listeLang
             .form-group(data-lang=keyLang)
-              p Langue :
-                label=keyLang
+              label.
+                Langue : #{keyLang}
 
 
   center
@@ -23,16 +23,19 @@ block content
            Clés
           each val in listeLang
             th= val.label
+          th.
 
       tbody
         each val, key in objReturn
           tr.line(id='row_'+ key.replace(/\./gi, '-'), data-key=key)
-            th
+            th.modTrig
               span.key(id='data.'+key)=key
-              button.close(id='btn_'+key, type='button', value='Supprimer', data-inputkey=key, data-dismiss='alert', data-spec='spec')
-                span.cross(aria-hidden='true') x
-                span.sr-only Close
 
             each lang, keyLang in listeLang
-              td#aze(data-lang=keyLang)
-                textarea.form-control(id=keyLang, data-key='data.'+key, data-lang=keyLang)=val[keyLang]||''
+              td.modTrig(data-lang=keyLang)
+                textarea.form-control(data-key='data.'+key, data-lang=keyLang, rows=1)=val[keyLang]||''
+
+            td
+              button.closed(id='btn_'+key, type='button', value='Supprimer', data-inputkey=key, data-dismiss='alert', data-spec='spec')
+                span.cross(aria-hidden='true') x
+                span.sr-only Close
