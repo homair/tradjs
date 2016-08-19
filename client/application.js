@@ -2,21 +2,47 @@ import $ from 'jquery'
 window.$ = $
 window.jQuery = $
 require('floatthead')
+import tether from 'tether'
+window.Tether = tether
+require('bootstrap')
 import 'bootstrap/scss/bootstrap.scss'
 import './styles/app.scss'
 
 $(document).ready(function () {
+  let editedId
+  // ----------------------------------------------------------------------------------
+  // Mise en place de la modal au clic sur une ligne
+  // ----------------------------------------------------------------------------------
+  $('.line').on('click', function () {
+    const $this = $(this)
+    editedId = $this.data('key')
+
+    $('#myModal').modal('show')
+    $('.modal-title').html('Clé : ' + $this.data('key'))
+    $this.find('textarea').each(function () {
+      const lang = $(this).data('lang')
+      $('.modal-body .form-group[data-lang="' + lang + '"]').append($(this))
+    })
+  })
+
+  $('#myModal').on('hidden.bs.modal', function () {
+    $(this).find('textarea').each(function () {
+      const lang = $(this).data('lang')
+      $('tr[data-key="' + editedId + '"] td[data-lang="' + lang + '"]').append($(this))
+    })
+  })
+  // ----------------------------------------------------------------------------------
+  // Requete Ajax pour le update des valeurs
+  // ----------------------------------------------------------------------------------
   let valFocus
-  $('input[type="text"].form-control')
+  $('textarea.form-control')
     .on('focus', function () {
       valFocus = $(this).val()
-      // console.log('$(this).val()', $(this).val())
-      $(this).addClass('champ')
+    // console.log('$(this).val()', $(this).val())
     })
     .on('blur', function () {
       const blur = $(this)
-      $(this).removeClass('champ')
-      // console.log('blur.val()', blur.val())
+      // console.log('blur.val()', blur.value())
       if (valFocus !== blur.val()) {
         $.ajax({
           type: 'POST',
@@ -33,8 +59,10 @@ $(document).ready(function () {
         })
       }
     })
-
-  $('button[type="button"]').on('click', function () {
+  // ----------------------------------------------------------------------------------
+  // Requete Ajax pour le delete des clées
+  // ----------------------------------------------------------------------------------
+  $('button[data-spec="spec"]').on('click', function () {
     if (confirm('Voulez-vous vraiment supprimer cette clé?')) { // Clic sur OK
       const key = $(this).data('inputkey')
       $.ajax({
@@ -53,18 +81,10 @@ $(document).ready(function () {
       })
     }
   })
-  $('.search').on('focus', function () {
-    if (this.value === 'Rechercher...') {
-      this.value = ''
-    }
-    $('.search').on('blur', function () {
-      if (this.value === '') {
-        this.value = 'Rechercher...'
-      }
-    })
-  })
-
-  $('input[type="search"].search').on('keyup', function () {
+  // -------------------------------------------------------------------------------
+  // Mise en place de la recherche
+  // -------------------------------------------------------------------------------
+  $('input.search').on('keyup', function () {
     let search = $(this).val()
     if (search === '') {
       $('tbody tr td input').removeClass('found')
@@ -73,9 +93,14 @@ $(document).ready(function () {
       recherche(search)
     }
   })
-
+  // ----------------------------------------------------------------------------
+  // Thead en float pour le scrolling
+  // ----------------------------------------------------------------------------
   $('table').floatThead({
     position: 'fixed'
+  // scrollContainer: function ($table) {
+  //   return $table.closest('.wrapper')
+  // }
   })
 })
 

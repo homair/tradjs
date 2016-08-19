@@ -1,49 +1,75 @@
+.wrapper
+{
+   overflow: auto;
+}
+
+table.table-bordered
+{
+  tbody
+  {
+    th {
+      padding: 5px 0.75em;
+      text-align: center;
+
+    }
+    td
+    {
+      padding: 0;
+    }
+    tr:hover
+    {
+      cursor: pointer;
+      background-color:#809fff;
+    }
+
+    .form-control:disabled, .form-control
+    {
+      border: 0;
+      border-radius: 0;
+      background-color: #fff;
+    }
+  }
+}
+
 table
 {
   border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
   margin: auto;
-}
-thead
-{
-  font-weight:bold;
-}
 
-tbody {
-  th {
-    font-size: 12px;
+  thead
+  {
+    font-weight:bold;
   }
 
-  tr{
-     &:hover{
-      cursor: pointer;
-     }
+  tbody {
+    th {
+      font-size: 12px;
+    }
+
+    td
+    {
+      text-align: center;
+    }
+    textarea
+      {
+      resize: none;
+      }
+    }
   }
-}
-
-td
-{
-  text-align: center;
-  border: 1px solid black;
-}
-tr
-{
-  margin: auto;
-}
-
 
 
 input
 {
   text-align: center;
-
 }
+
 button
 {
-text-align: center
-
+  text-align: center
 }
+
 .title{
-text-align: center
+  text-align: center
 }
 .class
 {
@@ -52,19 +78,14 @@ text-align: center
 .class1
 {
   background-color : white;
-    -webkit-transition-property:  background-color;
-    -webkit-transition-duration:  2s;
-    -webkit-transition-timing-function : ease;
-    transition-property:  background-color;
-    transition-duration:  2s;
-    transition-timing-function : ease;
-  }
-
-.champ
-{
-  width:500px;
-  position: absolute;
+  -webkit-transition-property:  background-color;
+  -webkit-transition-duration:  2s;
+  -webkit-transition-timing-function : ease;
+  transition-property:  background-color;
+  transition-duration:  2s;
+  transition-timing-function : ease;
 }
+
 .table-sortable tbody tr {
   cursor: move;
 }
@@ -73,6 +94,11 @@ text-align: center
 {
   background-color:#4d88ff;
 }
+.modal-header
+{
+  background-color:#4d88ff;
+}
+
 .cross
 {
   color:#ff1a1a
@@ -82,7 +108,16 @@ text-align: center
 {
   border: 1px red solid;
 }
-.found2
+.hide-modal{
+    width: 200px;
+  position: absolute;
+  margin: 0 auto;
+  right: 0;
+  left: 0;
+    bottom: 20px;
+  z-index: 9999;
+}
+#myModal
 {
-  color: red;
+  display: none;
 }
