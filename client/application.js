@@ -5,6 +5,7 @@ require('floatthead')
 import tether from 'tether'
 window.Tether = tether
 require('bootstrap')
+import bootbox from 'bootbox'
 import 'bootstrap/scss/bootstrap.scss'
 import './styles/app.scss'
 
@@ -67,24 +68,26 @@ $(document).ready(function () {
   // ----------------------------------------------------------------------------------
   // Requete Ajax pour le delete des clées
   // ----------------------------------------------------------------------------------
-  $('button[data-spec="spec"]').on('click', function () {
-    if (confirm('Voulez-vous vraiment supprimer cette clé?')) { // Clic sur OK
-      const key = $(this).data('inputkey')
-      $.ajax({
-        type: 'DELETE',
-        url: 'http://localhost:3000/delete',
-        data: {'key': key},
-        timeout: 3000,
-        success: function (data) {
-          console.log(data)
-          removeLine(key.replace(/\./gi, '-'))
-          function removeLine (string) {
-            $('#row_' + string).remove()
-          }
-        },
-        error: function () { alert("La requête n'a pas aboutit") }
-      })
-    }
+  $('button[data-confirm="confirmation"]').on('click', function () {
+    const key = $(this).data('inputkey')
+    bootbox.confirm('Etes vous sûr de vouloir supprimer cette ligne?', function (result) {
+      if (result === true) {
+        $.ajax({
+          type: 'DELETE',
+          url: 'http://localhost:3000/delete',
+          data: {'key': key},
+          timeout: 3000,
+          success: function (data) {
+            console.log(data)
+            removeLine(key.replace(/\./gi, '-'))
+            function removeLine (string) {
+              $('#row_' + string).remove()
+            }
+          },
+          error: function () { alert("La requête n'a pas aboutit") }
+        })
+      }
+    })
   })
 
   // -------------------------------------------------------------------------------
@@ -105,10 +108,33 @@ $(document).ready(function () {
   // ----------------------------------------------------------------------------
   $('table').floatThead({
     position: 'fixed'
-  // scrollContainer: function ($table) {
-  //   return $table.closest('.wrapper')
-  // }
   })
+  // -----------------------------------------------------------------------------
+  // Réuni les racines des clés sous forme de th pliantes et dépliantes
+  // -----------------------------------------------------------------------------
+  let racine = ''
+  $('tr').find('span[id*="data"]').each(function (index, element) {
+    let key = $(element).data().key
+    let arrayOfKey = key.split('.')
+    if (racine !== arrayOfKey[0]) {
+      racine = arrayOfKey[0]
+      console.log('racine', racine)
+      $(element).closest('tr').before('<tr><th class="pliage" data-root="' + racine + '">' + racine + '</th></tr>')
+    }
+  })
+  $('th.pliage').on('click', function () {
+    const $this = $(this)
+    if ($this.hasClass('accordeon')) {
+      $('tr[id*="row_' + $this.data('root') + '"]').hide()
+      $this.removeClass('accordeon')
+      return
+    }
+    if ($this.hasClass('pliage')) {
+      $('tr[id*="row_' + $this.data('root') + '"]').show()
+      $this.addClass('accordeon')
+    }
+  })
+  $('tr[id*="row"]').hide()
 })
 
 function recherche (search) {

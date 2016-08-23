@@ -30,8 +30,8 @@ describe('Controllers', () => {
             if (err) {
               return done(err)
             }
-            console.log(res.text)
-            expect(res.body).to.have.deep.property('objetFinale.fr.key', 'azerfs')
+            // console.log(res.body)
+            expect(res.body).to.have.deep.property('objReturn.key.fr', 'azerfs')
             done()
           })
         })
@@ -42,7 +42,7 @@ describe('Controllers', () => {
       agent
         .delete('/delete')
         .type('form')
-        .send({'key': 'data.key', 'value': 'azerfs'})
+        .send({'key': 'key'})
         .end((err, res) => {
           if (err) {
             return done(err)
@@ -52,8 +52,8 @@ describe('Controllers', () => {
             if (err) {
               return done(err)
             }
-            console.log(res.body)
-            expect(res.body).to.not.have.deep.property('objetFinale.fr.key')
+            // console.log(res.body)
+            expect(res.body).to.not.have.property('objReturn.key')
             done()
           })
         })

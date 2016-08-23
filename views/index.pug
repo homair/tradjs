@@ -13,6 +13,8 @@ block content
                 Langue : #{keyLang}
 
 
+
+
   center
     input.search(id='searching', type='text', name='search', placeholder='Rechercher...')
   .wrapper
@@ -29,13 +31,14 @@ block content
         each val, key in objReturn
           tr.line(id='row_'+ key.replace(/\./gi, '-'), data-key=key)
             th.modTrig
-              span.key(id='data.'+key)=key
+              span.key(id='data.'+key, data-key=key)=key
 
             each lang, keyLang in listeLang
               td.modTrig(data-lang=keyLang)
                 textarea.form-control(data-key='data.'+key, data-lang=keyLang, rows=1)=val[keyLang]||''
 
             td
-              button.closed(id='btn_'+key, type='button', value='Supprimer', data-inputkey=key, data-dismiss='alert', data-spec='spec')
+              button.closed(id='btn_'+key, type='button', value='Supprimer', data-inputkey=key, data-dismiss='alert', data-confirm='confirmation')
                 span.cross(aria-hidden='true') x
                 span.sr-only Close
+

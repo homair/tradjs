@@ -44,6 +44,7 @@
     "babel-preset-stage-2": "^6.5.0",
     "babel-register": "^6.9.0",
     "body-parser": "^1.15.2",
+    "bootbox": "^4.4.0",
     "bootstrap": "^4.0.0-alpha.2",
     "colour": "^0.7.1",
     "compression": "^1.6.2",
