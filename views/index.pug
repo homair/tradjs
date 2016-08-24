@@ -28,17 +28,17 @@ block content
           th.
 
       tbody
-        each val, key in objReturn
-          tr.line(id='row_'+ key.replace(/\./gi, '-'), data-key=key)
+        each valTab in results
+          tr.line(id='row_'+ valTab.key.replace(/\./gi, '-'), data-key=valTab.key)
             th.modTrig
-              span.key(id='data.'+key, data-key=key)=key
+              span.key(id='data.'+valTab.key, data-key=valTab.key)=valTab.key
 
             each lang, keyLang in listeLang
               td.modTrig(data-lang=keyLang)
-                textarea.form-control(data-key='data.'+key, data-lang=keyLang, rows=1)=val[keyLang]||''
+                textarea.form-control(data-key='data.'+valTab.key, data-lang=keyLang, rows=1)=valTab[keyLang]||''
 
             td
-              button.closed(id='btn_'+key, type='button', value='Supprimer', data-inputkey=key, data-dismiss='alert', data-confirm='confirmation')
+              button.closed(id='btn_'+valTab.key, type='button', value='Supprimer', data-inputkey=valTab.key, data-dismiss='alert', data-confirm='confirmation')
                 span.cross(aria-hidden='true') x
                 span.sr-only Close
 

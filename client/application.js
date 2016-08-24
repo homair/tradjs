@@ -96,9 +96,12 @@ $(document).ready(function () {
   $('input.search').on('keyup', function () {
     let search = $(this).val()
     if (search === '') {
-      $('tbody tr td input').removeClass('found')
-      $('tbody tr').show()
-    } else if (search !== '') {
+      $('tbody tr td textarea').removeClass('found')
+      if ($('th.pliage').hasClass('pliage')) {
+        $('tr[id*="row_"]').hide()
+        $('tbody tr[class="affichage"]').show()
+    }
+  } else if (search !== '') {
       recherche(search)
     }
   })
@@ -113,33 +116,64 @@ $(document).ready(function () {
   // Réuni les racines des clés sous forme de th pliantes et dépliantes
   // -----------------------------------------------------------------------------
   let racine = ''
+  let racine1 = ''
   $('tr').find('span[id*="data"]').each(function (index, element) {
     let key = $(element).data().key
     let arrayOfKey = key.split('.')
+
     if (racine !== arrayOfKey[0]) {
       racine = arrayOfKey[0]
-      console.log('racine', racine)
-      $(element).closest('tr').before('<tr><th class="pliage" data-root="' + racine + '">' + racine + '</th></tr>')
+      $(element).closest('tr').before('<tr class="affichage"><th class="pliage" data-root="' + racine + '">' + racine + '</th></tr>')
+      //console.log('racine', racine)
+    }
+    if (racine1 !== arrayOfKey[1]) {
+      racine1 = arrayOfKey[1]
+      if (typeof racine1 === 'undefined' ) return
+      $(element).closest('tr').before('<tr class="affichage1"><th class="pliage1" data-root="' + racine + '-' + racine1 + '">' + racine + '.' + racine1 + '</th></tr>')
+      $('tr[id*="' + racine + '-' + racine1 + '"]').addClass('pliage1')
     }
   })
+
   $('th.pliage').on('click', function () {
     const $this = $(this)
     if ($this.hasClass('accordeon')) {
-      $('tr[id*="row_' + $this.data('root') + '"]').hide()
+      $('th.pliage1[data-root*="' + $this.data('root') + '"]').hide()
+         if ($('tr').not('.pliage1')){
+           $('tr[id*="row_' + $this.data('root') + '"]').hide()
+         }
       $this.removeClass('accordeon')
       return
     }
     if ($this.hasClass('pliage')) {
-      $('tr[id*="row_' + $this.data('root') + '"]').show()
+      $('th.pliage1[data-root*="' + $this.data('root') + '"]').show()
+         if ($('tr').not('.pliage1')){
+           $('tr[id*="row_' + $this.data('root') + '"]').show()
+         }
       $this.addClass('accordeon')
     }
   })
+  $('th.pliage1').on('click', function () {
+      const $this = $(this)
+    if ($this.hasClass('accordeon1')) {
+      $('tr[id*="row_' + $this.data('root') + '"]').hide()
+      $this.removeClass('accordeon1')
+      return
+    }
+    if ($this.hasClass('pliage1')) {
+      $('tr[id*="row_' + $this.data('root') + '"]').show()
+      $this.addClass('accordeon1')
+    }
+  })
+
+  $('tbody tr th[class="pliage"]').addClass('col-lg-12')
+  $('tbody tr th[class="pliage1"]').addClass('col-lg-12')
+  $('th.pliage1').hide()
   $('tr[id*="row"]').hide()
 })
 
 function recherche (search) {
   $('tbody tr').hide()
   $('tbody tr[id*="' + search + '"]').show()
-  $('tbody tr td input').removeClass('found')
-  $('tbody tr td input[value*="' + search + '"]').addClass('found').closest('tr').show()
+  $('tbody tr th td textarea').removeClass('found')
+  $('tbody tr th td textarea[value*="' + search + '"]').addClass('found').closest('tr').show()
 }
