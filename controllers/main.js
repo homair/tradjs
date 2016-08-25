@@ -5,7 +5,6 @@ import config from '../config/'
 import 'colors'
 import { getOrderedDocs, updateRoute, deleteRoute } from '../lib/manageDocs'
 
-// routeur Express
 const router = new Router()
 
 // -------------------------------------------------
@@ -36,8 +35,6 @@ router.delete('/delete', (req, res) => {
 
 // Recup d'un document
 router.get('/doc_by_language/:lang', (req, res) => {
-  // console.log(req.params)
-
   const myLanguageConfig = {[req.params.lang]: config.langs[req.params.lang]}
 
   getOrderedDocs(myLanguageConfig, function (err, params) {
@@ -45,7 +42,6 @@ router.get('/doc_by_language/:lang', (req, res) => {
       console.error('main.js, doc_by_language:', err)
       return res.status(500).json(err)
     }
-    // console.log(params)
     res.json(params)
   })
 })
@@ -67,13 +63,9 @@ router.get('/', (req, res) => {
     // ------------------------------------------------
     // Envoi des informations désirées côté client
     // ------------------------------------------------
-    // res.render('index')
     res.render('index', params)
   })
-// console.log('params ', params)
 })
-
-// Finally, manage routes that haven't been catched... 40x, 50x...
 router.use(httpErrorController)
 
 export default router

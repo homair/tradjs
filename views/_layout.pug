@@ -6,7 +6,16 @@ html
     link(rel='stylesheet', href='/tradjs.1.0.0.css')
   body
     header
-      h1.title Gestion des champs
+      center
+        table.table-bordered
+          thead
+            tr
+              th.styletitle.
+                Gestion des champs
+              th.style
+                input.search(id='searching', type='text', name='search', placeholder='Rechercher...')
+              th.
+
     script(src='/tradjs.1.0.0.js')
     .main-content
       block content

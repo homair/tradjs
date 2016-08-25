@@ -107,12 +107,14 @@ $(document).ready(function () {
     }
   })
   $('input.search').focus()
+
   // ----------------------------------------------------------------------------
   // Thead en float pour le scrolling
   // ----------------------------------------------------------------------------
   $('table').floatThead({
     position: 'fixed'
   })
+
   // -----------------------------------------------------------------------------
   // Réuni les racines des clés sous forme de th pliantes et dépliantes
   // -----------------------------------------------------------------------------
@@ -135,35 +137,40 @@ $(document).ready(function () {
     }
   })
 
+  /* ----- Pliage et dépliage des lignes au moment du clic pour le premier niveau ------- */
   $('th.pliage').on('click', function () {
     const $this = $(this)
     if ($this.hasClass('accordeon')) {
-      $('th.pliage_ss_niveau[data-root*="' + $this.data('root') + '"]').hide()
-      $('tr[id*="row_' + $this.data('root') + '"]').not('.pliage_spec').hide()
+      $('th.pliage_ss_niveau[data-root^="' + $this.data('root') + '"]').hide()
+      $('tr[id^="row_' + $this.data('root') + '"]').not('.pliage_spec').hide()
+      $('tr[id^="row_' + $this.data('root') + '"]').hide()
       $this.removeClass('accordeon')
       return
     }
     if ($this.hasClass('pliage')) {
-      $('th.pliage_ss_niveau[data-root*="' + $this.data('root') + '"]').show()
-      $('tr[id*="row_' + $this.data('root') + '"]').not('.pliage_spec').show()
+      $('th.pliage_ss_niveau[data-root^="' + $this.data('root') + '"]').show()
+      $('tr[id^="row_' + $this.data('root') + '"]').not('.pliage_spec').show()
       $this.addClass('accordeon')
     }
   })
+
+  /* ----- Pliage et dépliage des lignes au moment du clic pour le deuxième niveau ------- */
+
   $('th.pliage_ss_niveau').on('click', function () {
     const $this = $(this)
     if ($this.hasClass('accordeon_ss_niveau')) {
-      $('tr[id*="row_' + $this.data('root') + '"]').hide()
+      $('tr[id^="row_' + $this.data('root') + '"]').hide()
       $this.removeClass('accordeon_ss_niveau')
       return
     }
     if ($this.hasClass('pliage_ss_niveau')) {
-      $('tr[id*="row_' + $this.data('root') + '"]').show()
+      $('tr[id^="row_' + $this.data('root') + '"]').show()
       $this.addClass('accordeon_ss_niveau')
     }
   })
 
-  $('tbody tr th[class="pliage"]').addClass('col-lg-12')
-  $('tbody tr th[class="pliage_ss_niveau"]').addClass('col-lg-12')
+  // $('tbody tr th[class="pliage"]').addClass('col-lg-12')
+  // $('tbody tr th[class="pliage_ss_niveau"]').addClass('col-lg-12')
   $('th.pliage_ss_niveau').hide()
   $('tr[id*="row"]').hide()
 })

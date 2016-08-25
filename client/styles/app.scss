@@ -21,6 +21,7 @@ table.table-bordered
       background-color:#ccd9ff;
     }
 
+
     .form-control:disabled, .form-control
     {
       border: 0;
@@ -34,7 +35,6 @@ table
 {
   border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
   margin: auto;
-
   thead
   {
     font-weight:bold;
@@ -56,7 +56,6 @@ table
     }
   }
 
-
 input
 {
   text-align: center;
@@ -67,13 +66,16 @@ button
   text-align: center
 }
 
-.title{
+.title
+{
   text-align: center
 }
+
 .class
 {
   background-color: lightgreen;
 }
+
 .class1
 {
   background-color : white;
@@ -93,6 +95,7 @@ button
 {
   background-color:#4d88ff;
 }
+
 .modal-header
 {
   background-color:#4d88ff;
@@ -112,6 +115,7 @@ button
 {
   display: none;
 }
+
 .closed
 {
     font-size: 1.5rem;
@@ -124,12 +128,27 @@ button
 
 .pliage
 {
-  background-color:#ccffcc;
-  width : 369%;
+  background-color:#bfbfbf;
+  width : auto;
 }
 
 .pliage_ss_niveau
 {
-  background-color: #ff66cc;
+  background-color: #8c8c8c;
 }
 
+.style
+{
+   padding: 12px;
+   padding-right:150px;
+   background-color:#4d88ff;
+}
+
+.styletitle
+{
+  background-color:#4d88ff;
+  text-align: center;
+  width: 100%;
+  font-size: 25px;
+  padding: 7px;
+}
