@@ -126,13 +126,13 @@ $(document).ready(function () {
 
     if (racine !== arrayOfKey[0]) {
       racine = arrayOfKey[0]
-      $(element).closest('tr').before('<tr class="affichage"><th class="pliage" data-root="' + racine + '">' + racine + '</th></tr>')
+      $(element).closest('tr').before('<tr class="affichage"><th class="pliage" data-root="' + racine + '">' + racine + '<span class="fa fa-chevron-down" aria-hidden="true"></span>' + '</th></tr>')
     // console.log('racine', racine)
     }
     if (racinessniveau !== arrayOfKey[1]) {
       racinessniveau = arrayOfKey[1]
       if (typeof racinessniveau === 'undefined') return
-      $(element).closest('tr').before('<tr class="affichage_ss_niveau"><th class="pliage_ss_niveau" data-root="' + racine + '-' + racinessniveau + '">' + racine + '.' + racinessniveau + '</th></tr>')
+      $(element).closest('tr').before('<tr class="affichage_ss_niveau"><th class="pliage_ss_niveau" data-root="' + racine + '-' + racinessniveau + '">' + racine + '.' + racinessniveau + '<span class="fa fa-chevron-down" aria-hidden="true"></span>' + '</th></tr>')
       $('tr[id*="' + racine + '-' + racinessniveau + '"]').addClass('pliage_spec')
     }
   })
@@ -141,6 +141,10 @@ $(document).ready(function () {
   $('th.pliage').on('click', function () {
     const $this = $(this)
     if ($this.hasClass('accordeon')) {
+      $('.fa-chevron-up', $this).hide()
+      $('.fa-chevron-down', $this).show()
+      $('.fa-chevron-up', $('th.pliage_ss_niveau')).hide()
+
       $('th.pliage_ss_niveau[data-root^="' + $this.data('root') + '"]').hide()
       $('tr[id^="row_' + $this.data('root') + '"]').not('.pliage_spec').hide()
       $('tr[id^="row_' + $this.data('root') + '"]').hide()
@@ -148,6 +152,10 @@ $(document).ready(function () {
       return
     }
     if ($this.hasClass('pliage')) {
+      $('.fa-chevron-down', $this).hide()
+      $this.append('<span class="fa fa-chevron-up" aria-hidden="true"></span>')
+      $('.fa-chevron-down', $('th.pliage_ss_niveau')).show()
+
       $('th.pliage_ss_niveau[data-root^="' + $this.data('root') + '"]').show()
       $('tr[id^="row_' + $this.data('root') + '"]').not('.pliage_spec').show()
       $this.addClass('accordeon')
@@ -155,15 +163,20 @@ $(document).ready(function () {
   })
 
   /* ----- Pliage et dépliage des lignes au moment du clic pour le deuxième niveau ------- */
-
   $('th.pliage_ss_niveau').on('click', function () {
     const $this = $(this)
     if ($this.hasClass('accordeon_ss_niveau')) {
+      $('.fa-chevron-up', $this).hide()
+      $('.fa-chevron-down', $this).show()
+
       $('tr[id^="row_' + $this.data('root') + '"]').hide()
       $this.removeClass('accordeon_ss_niveau')
       return
     }
     if ($this.hasClass('pliage_ss_niveau')) {
+      $('.fa-chevron-down', $this).hide()
+      $this.append('<span class="fa fa-chevron-up" aria-hidden="true"></span>')
+
       $('tr[id^="row_' + $this.data('root') + '"]').show()
       $this.addClass('accordeon_ss_niveau')
     }

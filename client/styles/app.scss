@@ -5,6 +5,7 @@
 
 table.table-bordered
 {
+  font-family: Muli;
   tbody
   {
     th {
@@ -93,12 +94,13 @@ button
 
 .color
 {
-  background-color:#4d88ff;
+  background-color:#004d73;
 }
 
 .modal-header
 {
-  background-color:#4d88ff;
+  background-color:#004d73;
+  color: white;
 }
 
 .cross
@@ -118,37 +120,68 @@ button
 
 .closed
 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1;
-    opacity: .2;
-    background: transparent;
-    border: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: .2;
+  background: transparent;
+  border: 0;
 }
 
 .pliage
 {
-  background-color:#bfbfbf;
-  width : auto;
+  background-color:#414c5d;
+  color: white;
 }
 
 .pliage_ss_niveau
 {
-  background-color: #8c8c8c;
+  background-color:#DDD;
 }
 
 .style
 {
    padding: 12px;
    padding-right:150px;
-   background-color:#4d88ff;
+   padding-left:150px;
+   background-color:#004d73;
 }
 
 .styletitle
 {
-  background-color:#4d88ff;
+  background-color:#004d73;
   text-align: center;
   width: 100%;
   font-size: 25px;
   padding: 7px;
+}
+.search
+{
+  display: block;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #55595c;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+}
+.fa-chevron-down
+{
+  float : right;
+}
+
+.fa-chevron-up
+{
+  float : right;
+}
+
+.fa-search
+{
+ width: 27px;
+}
+
+.input-group
+{
+  border-collapse: collapse;
 }
