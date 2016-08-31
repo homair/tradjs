@@ -1,11 +1,16 @@
 import $ from 'jquery'
 window.$ = $
 window.jQuery = $
+
 require('floatthead')
+
 import tether from 'tether'
 window.Tether = tether
+
 require('bootstrap')
+
 import bootbox from 'bootbox'
+
 import 'bootstrap/scss/bootstrap.scss'
 import './styles/app.scss'
 
@@ -43,24 +48,25 @@ $(document).ready(function () {
   $('textarea.form-control')
     .on('focus', function () {
       valFocus = $(this).val()
-    // console.log('$(this).val()', $(this).val())
     })
     .on('blur', function () {
-      const blur = $(this)
-      // console.log('blur.val()', blur.value())
-      if (valFocus !== blur.val()) {
+      const el = $(this)
+      if (valFocus !== el.val()) {
         $.ajax({
           type: 'POST',
-          url: 'http://localhost:3000/update',
+          url: window.location.origin + '/update',
           data: {'key': $(this).attr('data-key'), 'value': $(this).val(), 'language': $(this).attr('data-lang')},
           timeout: 3000,
           success: function (data) {
-            console.log(data)
-            blur.addClass('class')
-            window.setTimeout(function () { blur.addClass('class1') }, 10)
-            blur.removeClass('class1')
+            if (data === 'ok') {
+              el.addClass('class')
+              window.setTimeout(function () { el.addClass('class1') }, 10)
+              el.removeClass('class1')
+            }
           },
-          error: function () { alert("La requête n'a pas aboutit") }
+          error: function (err) {
+            bootbox.alert('Error while updating data : ' + err)
+          }
         })
       }
     })
@@ -74,17 +80,18 @@ $(document).ready(function () {
       if (result === true) {
         $.ajax({
           type: 'DELETE',
-          url: 'http://localhost:3000/delete',
+          url: window.location.origin + '/delete',
           data: {'key': key},
           timeout: 3000,
           success: function (data) {
-            console.log(data)
-            removeLine(key.replace(/\./gi, '-'))
-            function removeLine (string) {
-              $('#row_' + string).remove()
+            if (data === 'ok') {
+              console.log(data)
+              removeLine(key.replace(/\./gi, '-'))
             }
           },
-          error: function () { alert("La requête n'a pas aboutit") }
+          error: function (err) {
+            bootbox.alert('Error while deleting data : ' + err)
+          }
         })
       }
     })
@@ -96,17 +103,17 @@ $(document).ready(function () {
   $('input.search').on('keyup', function () {
     let search = $(this).val()
     if (search === '') {
-      $('tbody tr td textarea').removeClass('found')
-      if ($('th.pliage').hasClass('pliage')) {
-        $('tr[id*="row_"]').hide()
-        $('tbody tr[class="affichage"]').show()
-        $('tbody tr[class="affichage_ss_niveau"]').show()
-      }
-    } else if (search !== '') {
+      resetSearch()
+    } else {
       recherche(search)
     }
   })
   $('input.search').focus()
+
+  $('#reset-search').on('click', function () {
+    $('#searching').val('')
+    resetSearch()
+  })
 
   // ----------------------------------------------------------------------------
   // Thead en float pour le scrolling
@@ -127,7 +134,6 @@ $(document).ready(function () {
     if (racine !== arrayOfKey[0]) {
       racine = arrayOfKey[0]
       $(element).closest('tr').before('<tr class="affichage"><th class="pliage" data-root="' + racine + '">' + racine + '<span class="fa fa-chevron-down" aria-hidden="true"></span>' + '</th></tr>')
-    // console.log('racine', racine)
     }
     if (racinessniveau !== arrayOfKey[1]) {
       racinessniveau = arrayOfKey[1]
@@ -193,4 +199,17 @@ function recherche (search) {
   $('tbody tr[id*="' + search + '"]').show()
   $('tbody tr th td textarea').removeClass('found')
   $('tbody tr th td textarea[value*="' + search + '"]').addClass('found').closest('tr').show()
+}
+
+function resetSearch () {
+  $('tbody tr td textarea').removeClass('found')
+  if ($('th.pliage').hasClass('pliage')) {
+    $('tr[id*="row_"]').hide()
+    $('tbody tr[class="affichage"]').show()
+    $('tbody tr[class="affichage_ss_niveau"]').show()
+  }
+}
+
+function removeLine (idRow) {
+  $('#row_' + idRow).remove()
 }

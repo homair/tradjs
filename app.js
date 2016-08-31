@@ -7,6 +7,7 @@ import compression from 'compression'
 import express from 'express'
 import { join as joinPaths } from 'path'
 import morgan from 'morgan'
+import config from './config/'
 
 import mainController from './controllers/main'
 
@@ -19,7 +20,7 @@ const publicPath = joinPaths(__dirname, 'public')
 // -------------
 
 // Configuration et middleware pour tous les environnements (dev, prod, etc.)
-app.set('port', process.env.PORT || 3000)
+app.set('port', config.port)
 app.set('view engine', 'pug')
 // if (process.env.NODE_ENV === 'production') {
 //   app.set('view cache', true)
