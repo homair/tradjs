@@ -15,9 +15,6 @@
 
 var getConfig = require('hjs-webpack')
 
-const isDev = process.env.NODE_ENV !== 'production'
-console.log('isDev  ', isDev)
-
 module.exports = getConfig({
   hot: false,
   html: false,

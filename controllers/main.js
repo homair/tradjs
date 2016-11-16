@@ -53,8 +53,6 @@ router.get('/', (req, res) => {
   // console.log(req.query)
 
   getOrderedDocs(config.langs, function (err, params) {
-    console.log("end getOrderedDocs")
-
     if (err) {
       console.error('main.js:', err)
       return res.render('errors/500', err)

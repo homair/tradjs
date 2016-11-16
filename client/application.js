@@ -15,8 +15,6 @@ import 'bootstrap/scss/bootstrap.scss'
 import './styles/app.scss'
 
 $(document).ready(function () {
-  console.log('document ready : start of process')
-
   let editedId
   // ----------------------------------------------------------------------------------
   // Mise en place de la modal au clic sur une ligne
@@ -130,7 +128,6 @@ $(document).ready(function () {
   let racine = ''
   let racinessniveau = ''
 
-  console.log('start to process tab')
   $('tr').find('span[id*="data"]').each(function (index, element) {
     let key = $(element).data().key
     let arrayOfKey = key.split('.')
@@ -147,7 +144,6 @@ $(document).ready(function () {
     }
   })
 
-  console.log('END to process tab')
   /* ----- Pliage et dépliage des lignes au moment du clic pour le premier niveau ------- */
   $('th.pliage').on('click', function () {
     const $this = $(this)
