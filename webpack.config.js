@@ -22,7 +22,7 @@ module.exports = getConfig({
   out: 'public',
   clearBeforeBuild: '!(images|fonts|favicon.ico|font-awesome.min.css)',
   output: {
-    filename: 'tradjs.1.0.0.js',
+    /* filename: 'tradjs.1.0.0.js', */
     path: __dirname + '/public'
   },
   isDev: false
