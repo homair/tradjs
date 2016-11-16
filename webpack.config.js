@@ -15,15 +15,15 @@
 
 var getConfig = require('hjs-webpack')
 
-const isDev = process.env.NODE_ENV != 'production'
-console.log('isDev  ' , isDev)
+const isDev = process.env.NODE_ENV !== 'production'
+console.log('isDev  ', isDev)
 
 module.exports = getConfig({
   hot: false,
   html: false,
   in: 'client/application.js',
   out: 'public',
-  clearBeforeBuild: '!(images|fonts|favicon.ico)',
+  clearBeforeBuild: '!(images|fonts|favicon.ico|font-awesome.min.css)',
   output: {
     filename: 'tradjs.1.0.0.js',
     path: __dirname + '/public'

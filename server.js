@@ -20,7 +20,7 @@ dbConnect(() => {
   // Lancement effectif du serveur en écoutant sur le bon port pour des
   // connexions HTTP entrantes.  Le port par défaut est 3000 (voir plus haut).
   server.listen(app.get('port'), () => {
-    console.log('✔ Server listening on', ('http://localhost:' + app.get('port')).cyan)
+    console.log('✔ Server listening on port ', app.get('port').cyan)
   })
 })
 

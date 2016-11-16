@@ -13,7 +13,7 @@ const router = new Router()
 router.post('/update', (req, res) => {
   console.log(req.body)
   if (typeof req.body.key === 'undefined' || typeof req.body.value === 'undefined' || typeof req.body.language === 'undefined') {
-    console.error('Des datas sont manquantes')
+    console.error('main.js, Update : des données sont manquantes')
     res.status(500).json({msg: 'Des paramètres sont manquants'})
   } else {
     updateRoute(req, res)
@@ -53,7 +53,7 @@ router.get('/', (req, res) => {
   // console.log(req.query)
 
   getOrderedDocs(config.langs, function (err, params) {
-    // console.log(params)
+    console.log("end getOrderedDocs")
 
     if (err) {
       console.error('main.js:', err)
@@ -63,7 +63,7 @@ router.get('/', (req, res) => {
     // ------------------------------------------------
     // Envoi des informations désirées côté client
     // ------------------------------------------------
-    res.render('index', params)
+    return res.render('index', params)
   })
 })
 router.use(httpErrorController)

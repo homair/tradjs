@@ -15,9 +15,9 @@
   "homepage": "https://github.com/homair/tradjs#readme",
   "scripts": {
     "build": "NODE_ENV=dev webpack",
-    "dev:client": "webpack --watch",
-    "dev:server": "PORT=3002 nodemon boot.js",
-    "dev:test": "npm run test -- --watch",
+    "client": "webpack --watch",
+    "server": "NODE_ENV=dev PORT=3002 nodemon boot.js",
+    "test": "npm run test -- --watch",
     "start": "node boot.js",
     "test": "NODE_ENV=test mocha",
     "install": "npm i -g webpack"
