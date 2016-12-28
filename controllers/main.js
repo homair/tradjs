@@ -3,10 +3,10 @@ import { Router } from 'express'
 import httpErrorController from './httpErrors'
 import config from '../config/'
 import 'colors'
+import logger from '../lib/customLogger'
 import { getOrderedDocs, updateRoute, deleteRoute } from '../lib/manageDocs'
 
 const router = new Router()
-
 
 // Authentification
 router.all('*', (req, res, next) => {
@@ -17,22 +17,22 @@ router.all('*', (req, res, next) => {
   if (!login || !password || login !== auth.login || password !== auth.password) {
     res.set('WWW-Authenticate', 'Basic realm="Homair Vacances"')
     res.status(401).send('Please provide valid credentials...')
+    logger.info(`Authentication failed with login=${login} and password=${password}`)
     return
   }
   // -----------------------------------------------------------------------
   // Access granted...
-  console.log('Authentification cleared')
+  logger.debug('Authentification cleared')
   next()
 })
-
 
 // -------------------------------------------------
 // Update d'un label
 // -------------------------------------------------
 router.post('/update', (req, res) => {
-  console.log(req.body)
+  logger.debug('endpoint=update', req.body)
   if (typeof req.body.key === 'undefined' || typeof req.body.value === 'undefined' || typeof req.body.language === 'undefined') {
-    console.error('main.js, Update : des données sont manquantes')
+    logger.error('endpoint=update, Error : missing datas to update records')
     res.status(500).json({msg: 'Des paramètres sont manquants'})
   } else {
     updateRoute(req, res)
@@ -43,11 +43,12 @@ router.post('/update', (req, res) => {
 // Suppression d'un label
 // -------------------------------------------------
 router.delete('/delete', (req, res) => {
-  // console.log(req.body)
+  logger.info('endpoint=delete', req.body)
   if (typeof req.body.key === 'undefined') {
-    console.error('main.js, delete: des paramètres sont manquants')
+    logger.error('endpoint=delete, Error : missing parameters to delete key')
     res.status(500).json({msg: 'Des paramètres sont manquants'})
   } else {
+    logger.warn(`endpoint=delete, translation key=${req.body.key} deleted !`)
     deleteRoute(req, res)
   }
 })
@@ -58,7 +59,7 @@ router.get('/doc_by_language/:lang', (req, res) => {
 
   getOrderedDocs(myLanguageConfig, function (err, params) {
     if (err) {
-      console.error('main.js, doc_by_language:', err)
+      logger.error('main.js, doc_by_language:', err)
       return res.status(500).json(err)
     }
     res.json(params)
@@ -69,11 +70,9 @@ router.get('/doc_by_language/:lang', (req, res) => {
 // Recup de tous les labels
 // -------------------------------------------------
 router.get('/', (req, res) => {
-  // console.log(req.query)
-
   getOrderedDocs(config.langs, function (err, params) {
     if (err) {
-      console.error('main.js:', err)
+      logger.error('main.js:', err)
       return res.render('errors/500', err)
     }
 

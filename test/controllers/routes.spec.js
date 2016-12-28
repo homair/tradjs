@@ -3,8 +3,6 @@ import request from 'supertest'
 import 'colors'
 import server from '../../server'
 import app from '../../app'
-import unfluff from 'unfluff'
-import config from '../../config/'
 
 describe('Controllers', () => {
   before(() => {
@@ -21,17 +19,23 @@ describe('Controllers', () => {
         .post('/update')
         .type('form')
         .send({'key': 'data.key', 'value': 'azerfs', 'language': 'fr'})
+        .auth('homair', 'site2016')
         .end((err, res) => {
           if (err) {
             return done(err)
           }
 
-          agent.get('/doc_by_language/fr').end((err, res) => {
+          agent.get('/doc_by_language/fr').auth('homair', 'site2016').end((err, res) => {
             if (err) {
               return done(err)
             }
-            // console.log(res.body)
-            expect(res.body).to.have.deep.property('objReturn.key.fr', 'azerfs')
+            let found = false
+            res.body.results.forEach((el) => {
+              if (el.key === 'key' && el.fr === 'azerfs') {
+                found = true
+              }
+            })
+            expect(found).to.be.true
             done()
           })
         })
@@ -43,35 +47,26 @@ describe('Controllers', () => {
         .delete('/delete')
         .type('form')
         .send({'key': 'key'})
+        .auth('homair', 'site2016')
         .end((err, res) => {
           if (err) {
             return done(err)
           }
 
-          agent.get('/doc_by_language/fr').end((err, res) => {
+          agent.get('/doc_by_language/fr').auth('homair', 'site2016').end((err, res) => {
             if (err) {
               return done(err)
             }
-            // console.log(res.body)
-            expect(res.body).to.not.have.property('objReturn.key')
+            let found = false
+            res.body.results.forEach((el) => {
+              if (el.key === 'key' && el.fr === 'azerfs') {
+                found = true
+              }
+            })
+            expect(found).to.be.false
             done()
           })
         })
     })
   })
 })
-/*
-  expect(res.body.query).to.have.property('carto')
-          expect(res.body.query.carto).to.equal('mapBox')
-          expect(res.body.result).to.have.property('status')
-          expect(res.body.result.status).to.equal('READY')
-
- //.query({carto: 'mapBox', size: 2})
-// const analysis = unfluff(res.text)
- // console.log('analysis ', analysis)
- // expect(analysis.softTitle.toUpperCase()).contains('')
- console.log((res.text))
- if (err) {
-   return res.send('errors/500', {msg: err})
- }
- res.send('ok')*/

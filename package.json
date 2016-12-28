@@ -17,9 +17,8 @@
     "build": "webpack",
     "client": "webpack --watch",
     "server": "NODE_ENV=dev PORT=3002 nodemon boot.js",
-    "test": "npm run test -- --watch",
-    "start": "node boot.js",
     "test": "NODE_ENV=test mocha",
+    "start": "node boot.js",
     "install": "npm i -g webpack"
   },
   "babel": {
@@ -64,7 +63,8 @@
     "resolve-url-loader": "^1.6.0",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
-    "tether": "^1.3.4"
+    "tether": "^1.3.4",
+    "winston": "^2.3.0"
   },
   "devDependencies": {
     "ab-tool": "^0.2.0",

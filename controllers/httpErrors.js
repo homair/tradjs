@@ -34,8 +34,6 @@ router.get('/500', function (req, res, next) {
 
 router.use(function (req, res, next) {
   res.status(404)
-
-  console.log('http errors...'.red)
   // respond with html page
   res.render('errors/404', { url: req.url })
 })
@@ -52,7 +50,7 @@ router.use(function (req, res, next) {
 // would remain being executed, however here
 // we simply respond with an error page.
 
-/*router.use((err, req, res, next) => {
+/* router.use((err, req, res, next) => {
   // we may use properties of the error object
   // here and next(err) appropriately, or if
   // we possibly recovered from the error, simply next().
