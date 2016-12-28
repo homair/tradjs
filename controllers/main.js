@@ -30,7 +30,7 @@ router.all('*', (req, res, next) => {
 // Update d'un label
 // -------------------------------------------------
 router.post('/update', (req, res) => {
-  logger.debug('endpoint=update', req.body)
+  logger.info('endpoint=update', req.body)
   if (typeof req.body.key === 'undefined' || typeof req.body.value === 'undefined' || typeof req.body.language === 'undefined') {
     logger.error('endpoint=update, Error : missing datas to update records')
     res.status(500).json({msg: 'Des paramètres sont manquants'})
