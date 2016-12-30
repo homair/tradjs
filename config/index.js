@@ -3,7 +3,7 @@ const config = {
   port: process.env.PORT || 3002,
   db: {
     mongodb: process.env.MONGODB_URI || 'mongodb://localhost/honodbpreview',
-    root_collection: process.env.ROOT_COLLECTION || 'i18next_flat'
+    root_collection: process.env.ROOT_COLLECTION || 'i18next'    // ### => i18next_flat
   },
   langs: {
     'fr': {
@@ -33,7 +33,7 @@ const config = {
   },
   // order to sort docs
   lang_order: ['fr', 'en', 'de', 'es', 'it', 'nl'],
-  flat_collection: true,
+  flat_collection: false,  // ### => true
   translationNamespace: 'translation'
 }
 
