@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import config from '../../config/'
-import { parseSimpleObject, getOrderedDocs, tri } from '../../lib/manageDocs'
+import { parseSimpleObject, getRegularOrderedDocs, getFlatOrderedDocs, tri } from '../../lib/manageDocs'
 
 describe('Library test', () => {
   describe('when parsing objects', () => {
@@ -36,11 +36,23 @@ describe('Library test', () => {
   })
 
   describe('when ordering docs', () => {
-    it('should return the contents of the database sorted and displayed  ', (done) => {
-      getOrderedDocs(config.langs, function (err, params) {
+    it('should return the contents of the REGULAR collection, sorted  ', (done) => {
+      getRegularOrderedDocs(config.langs, function (err, params) {
         if (err) {
           done(err)
         }
+        // console.log('getRegularOrderedDocs', params)
+        expect(params).to.have.property('results')
+        done()
+      })
+    })
+
+    it('should return the contents of the FLAT collection sorted ', (done) => {
+      getFlatOrderedDocs(config.langs, function (err, params) {
+        if (err) {
+          done(err)
+        }
+        // console.log('getFlatOrderedDocs', params)
         expect(params).to.have.property('results')
         done()
       })
