@@ -33,7 +33,7 @@ const config = {
   },
   // order to sort docs
   lang_order: ['fr', 'en', 'de', 'es', 'it', 'nl'],
-  flat_collection: true,  // ### => false | true
+  flat_collection: process.env.FLAT_COLLECTION || true,  // ### => false | true
   translationNamespace: 'translation'
 }
 
