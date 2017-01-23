@@ -120,7 +120,7 @@ button
 
 .closed
 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   line-height: 1;
   opacity: .2;
@@ -139,22 +139,18 @@ button
   background-color:#DDD;
 }
 
-.style
-{
-   padding: 12px;
-   padding-right:150px;
-   padding-left:150px;
-   background-color:#004d73;
-}
-
-.styletitle
-{
+.stylehead {
   background-color:#004d73;
   text-align: center;
-  width: 100%;
-  font-size: 25px;
-  padding: 7px;
+  padding:5px;
+  heigth: 70px;
 }
+
+.title {
+  font-size: 25px;
+  color: white;
+}
+
 .search
 {
   display: block;
@@ -184,4 +180,21 @@ button
 .input-group
 {
   border-collapse: collapse;
+}
+
+
+button.show-untranslated {
+
+}
+
+button.switch-on {
+  background-color:green;
+  color:white;
+}
+
+tr.highlight {
+  background-color: #ffddae !important;
+}
+textarea.highlight {
+  border: 1px dotted orange !important;
 }

@@ -70,12 +70,17 @@ router.get('/doc_by_language/:lang', (req, res) => {
 // Recup de tous les labels
 // -------------------------------------------------
 router.get('/', (req, res) => {
+  console.log('entered main')
   getOrderedDocs(config.langs, function (err, params) {
     if (err) {
       logger.error('main.js:', err)
       return res.render('errors/500', err)
     }
 
+    // display
+    if (req.query && req.query.v === 'flat') {
+      params.display = 'flat'
+    }
     // ------------------------------------------------
     // Envoi des informations désirées côté client
     // ------------------------------------------------

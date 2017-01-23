@@ -103,12 +103,12 @@ $(document).ready(function () {
   $('input.search').on('keyup', function () {
     let search = $(this).val()
     if (search === '') {
-      resetSearch()
+      resetGrouppedSearch()
     } else {
       recherche(search)
     }
   })
-  $('input.search').focus()
+  // $('input.search').focus()
 
   $('#reset-search').on('click', function () {
     $('#searching').val('')
@@ -125,6 +125,52 @@ $(document).ready(function () {
   // -----------------------------------------------------------------------------
   // Réuni les racines des clés sous forme de th pliantes et dépliantes
   // -----------------------------------------------------------------------------
+  if ($('#tab_logic').data('regroup') === 1) {
+    regroupLabels()
+  } else {
+    $('#suk').addClass('switch-on')
+    $('textarea').filter(function () {
+      if ($.trim($(this).text()) === '') {
+        $(this).addClass('highlight').closest('tr').addClass('highlight')
+      }
+    })
+  }
+
+  $('#suk').on('click', function () {
+    console.log('Entered showUntranslated')
+    if ($('#suk').hasClass('switch-on')) {
+      window.location = '/'
+    } else {
+      window.location = '/?v=flat'
+    }
+  })
+})
+
+function recherche (search) {
+  $('tbody tr').hide()
+  $('tbody tr[id*="' + search + '"]').show()
+  $('tbody tr th td textarea').removeClass('found')
+  $('tbody tr th td textarea[value*="' + search + '"]').addClass('found').closest('tr').show()
+}
+
+function resetGrouppedSearch () {
+  $('tbody tr td textarea').removeClass('found')
+  if ($('th.pliage').hasClass('pliage')) {
+    $('tr[id*="row_"]').hide()
+    $('tbody tr[class="affichage"]').show()
+    $('tbody tr[class="affichage_ss_niveau"]').show()
+  }
+}
+function resetSearch () {
+  window.location.reload()
+}
+
+function removeLine (idRow) {
+  $('#row_' + idRow).remove()
+}
+
+function regroupLabels () {
+  console.log('Entered regroupLabels')
   let racine = ''
   let racinessniveau = ''
 
@@ -144,7 +190,7 @@ $(document).ready(function () {
     }
   })
 
-  /* ----- Pliage et dépliage des lignes au moment du clic pour le premier niveau ------- */
+   /* ----- Pliage et dépliage des lignes au moment du clic pour le premier niveau ------- */
   $('th.pliage').on('click', function () {
     const $this = $(this)
     if ($this.hasClass('accordeon')) {
@@ -193,24 +239,4 @@ $(document).ready(function () {
   // $('tbody tr th[class="pliage_ss_niveau"]').addClass('col-lg-12')
   $('th.pliage_ss_niveau').hide()
   $('tr[id*="row"]').hide()
-})
-
-function recherche (search) {
-  $('tbody tr').hide()
-  $('tbody tr[id*="' + search + '"]').show()
-  $('tbody tr th td textarea').removeClass('found')
-  $('tbody tr th td textarea[value*="' + search + '"]').addClass('found').closest('tr').show()
-}
-
-function resetSearch () {
-  $('tbody tr td textarea').removeClass('found')
-  if ($('th.pliage').hasClass('pliage')) {
-    $('tr[id*="row_"]').hide()
-    $('tbody tr[class="affichage"]').show()
-    $('tbody tr[class="affichage_ss_niveau"]').show()
-  }
-}
-
-function removeLine (idRow) {
-  $('#row_' + idRow).remove()
 }

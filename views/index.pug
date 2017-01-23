@@ -14,12 +14,9 @@ block content
         .modal-footer
           button.btn.btn-primary(data-dismiss="modal")="Save and close"
 
-
-
-
   center
     .wrapper
-      table#tab_logic.table.table-bordered
+      table#tab_logic.table.table-bordered(data-regroup=(display === 'flat' ? 0 : 1))
         thead.color.table-inverse
           tr
             th.

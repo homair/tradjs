@@ -7,21 +7,21 @@ html
     link(rel='stylesheet', href='/font-awesome.min.css')
   body
     header
-      center
-        table.table-bordered.table-inverse
-          thead
-            tr
-              th.styletitle.
-                Gestion des traductions
-              th.style
-                form.form-inline
-                  .form-group
-                    .input-group
-                      .input-group-addon
-                        span.fa.fa-search(aria-hidden="true")
-                      input.search(id='searching', type='text', name='search', placeholder='Rechercher...')
-                      #reset-search.input-group-addon
-                        span.fa.fa-close(aria-hidden="true")
+      .row.stylehead
+        .col-md-6.title='Gestion des traductions'
+        .col-md-3
+          form.form-inline
+            .form-group
+              .input-group
+                .input-group-addon
+                  span.fa.fa-search(aria-hidden="true")
+                input.search(id='searching', type='text', name='search', placeholder='Rechercher...')
+                #reset-search.input-group-addon
+                  span.fa.fa-close(aria-hidden="true")
+        .col-md-3
+          button#suk='Show untranslated keys'
+
+    table.table-bordered.table-inverse
 
     script(src='/tradjs.1.0.0.js')
     .main-content
