@@ -2,7 +2,7 @@ const config = {
   env: process.env.NODE_ENV || 'dev',
   port: process.env.PORT || 3002,
   db: {
-    mongodb: process.env.MONGODB_URI || 'mongodb://localhost/honodbpreview',
+    mongodb: process.env.MONGODB_URI || 'mongodb://localhost/honodblive',
     root_collection: process.env.ROOT_COLLECTION || 'i18next_flat'    // ### => i18next | i18next_flat
   },
   langs: {
