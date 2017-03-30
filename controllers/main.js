@@ -8,23 +8,31 @@ import { getOrderedDocs, updateRoute, deleteRoute } from '../lib/manageDocs'
 
 const router = new Router()
 
-// Authentification
-router.all('*', (req, res, next) => {
-  const auth = {login: 'homair', password: 'site2016'} // change this
-  const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
-  const [login, password] = new Buffer(b64auth, 'base64').toString().split(':')
-  // Verify login and password are set and correct
-  if (!login || !password || login !== auth.login || password !== auth.password) {
-    res.set('WWW-Authenticate', 'Basic realm="Homair Vacances"')
-    res.status(401).send('Please provide valid credentials...')
-    logger.info(`Authentication failed with login=${login} and password=${password}`)
-    return
-  }
-  // -----------------------------------------------------------------------
-  // Access granted...
-  logger.debug('Authentification cleared')
-  next()
-})
+
+// -----------------------------------------------------------------------
+// HTTP authentication.
+// -----------------------------------------------------------------------
+// If current environnement doesn't correspond to this list.
+if (['dev', 'test', 'production'].indexOf(process.env.NODE_ENV) === -1) {
+  router.all('*', (req, res, next) => {
+    // If the current client IP isn't authorized.
+    if (config.authorizedIps.indexOf(req.ip) === -1) {
+      const auth = {login: 'homair', password: 'site2016'} // change this
+      const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
+      const [login, password] = new Buffer(b64auth, 'base64').toString().split(':')
+      // Verify login and password are set and correct
+      if (!login || !password || login !== auth.login || password !== auth.password) {
+        res.set('WWW-Authenticate', 'Basic realm="Homair Vacances"')
+        res.status(401).send('Please provide valid credentials...')
+        return
+      }
+    }
+
+    next()
+  })
+}
+// -----------------------------------------------------------------------
+
 
 // -------------------------------------------------
 // Update d'un label

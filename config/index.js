@@ -5,6 +5,9 @@ const config = {
     mongodb: process.env.MONGODB_URI || 'mongodb://localhost/honodblive',
     root_collection: process.env.ROOT_COLLECTION || 'i18next_flat'    // ### => i18next | i18next_flat
   },
+  // Ips authorized to access to exports.
+  // No HTTP auth for those.
+  authorizedIps: ['127.0.0.1', '195.25.103.29'],
   langs: {
     'fr': {
       'label': 'Français',
