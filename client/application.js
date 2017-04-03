@@ -15,6 +15,9 @@ import 'bootstrap/scss/bootstrap.scss'
 import './styles/app.scss'
 
 $(document).ready(function () {
+  var _inputSearch = $('input.search')
+  _inputSearch.val(restoreFromStorage())
+
   let editedId
   // ----------------------------------------------------------------------------------
   // Mise en place de la modal au clic sur une ligne
@@ -100,13 +103,20 @@ $(document).ready(function () {
   // -------------------------------------------------------------------------------
   // Mise en place de la recherche
   // -------------------------------------------------------------------------------
-  $('input.search').on('keyup', function () {
+  _inputSearch.on('keyup', function () {
     let search = $(this).val()
+
+    saveToStorage(search)
+
     if (search === '') {
       resetGrouppedSearch()
     } else {
       recherche(search)
     }
+  })
+  .on('focus', function() {
+    // Préselectionne le texte de la zone pour remplacement rapide.
+    $(this).select()
   })
   // $('input.search').focus()
 
@@ -149,8 +159,12 @@ $(document).ready(function () {
 function recherche (search) {
   $('tbody tr').hide()
   $('tbody tr[id*="' + search + '"]').show()
-  $('tbody tr th td textarea').removeClass('found')
-  $('tbody tr th td textarea[value*="' + search + '"]').addClass('found').closest('tr').show()
+  $('tbody textarea').removeClass('found')
+  // $('tbody textarea').filter().addClass('found').closest('tr').show()
+  var re = new RegExp(search, 'ig')
+  var ta = $('textarea').filter(function () { return re.test($(this).val()) })
+  console.log(ta.length)
+  ta.closest('tr').show()
 }
 
 function resetGrouppedSearch () {
@@ -239,4 +253,13 @@ function regroupLabels () {
   // $('tbody tr th[class="pliage_ss_niveau"]').addClass('col-lg-12')
   $('th.pliage_ss_niveau').hide()
   $('tr[id*="row"]').hide()
+}
+
+function saveToStorage (txt) {
+  if (!window.localStorage) return
+  window.localStorage.setItem('tradjs-searchtext', txt)
+}
+function restoreFromStorage () {
+  if (!window.localStorage) return ''
+  return window.localStorage.getItem('tradjs-searchtext') || ''
 }
