@@ -15,10 +15,9 @@ import 'bootstrap/scss/bootstrap.scss'
 import './styles/app.scss'
 
 $(document).ready(function () {
-  var _inputSearch = $('input.search')
-  _inputSearch.val(restoreFromStorage())
-
   let editedId
+  var _inputSearch = $('input.search')
+
   // ----------------------------------------------------------------------------------
   // Mise en place de la modal au clic sur une ligne
   // ----------------------------------------------------------------------------------
@@ -114,7 +113,7 @@ $(document).ready(function () {
       recherche(search)
     }
   })
-  .on('focus', function() {
+  .on('focus', function () {
     // Préselectionne le texte de la zone pour remplacement rapide.
     $(this).select()
   })
@@ -123,6 +122,14 @@ $(document).ready(function () {
   $('#reset-search').on('click', function () {
     $('#searching').val('')
     resetSearch()
+  })
+
+  $('#suk').on('click', function () {
+    if ($('#suk').hasClass('switch-on')) {
+      window.location = '/'
+    } else {
+      window.location = '/?v=flat'
+    }
   })
 
   // ----------------------------------------------------------------------------
@@ -146,14 +153,11 @@ $(document).ready(function () {
     })
   }
 
-  $('#suk').on('click', function () {
-    console.log('Entered showUntranslated')
-    if ($('#suk').hasClass('switch-on')) {
-      window.location = '/'
-    } else {
-      window.location = '/?v=flat'
-    }
-  })
+  var oldVal = restoreFromStorage()
+  if (oldVal) {
+    _inputSearch.val(oldVal)
+    recherche(oldVal)
+  }
 })
 
 function recherche (search) {
