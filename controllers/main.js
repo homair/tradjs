@@ -13,7 +13,6 @@ const router = new Router()
 // -----------------------------------------------------------------------
 // If current environnement doesn't correspond to this list.
 router.all('*', (req, res, next) => {
-  console.log('ip=', req.ip);
   // If the current client IP isn't authorized.
   if (config.authorizedIps.indexOf(req.ip) === -1) {
     const auth = {login: 'homair', password: 'site2016'} // change this
