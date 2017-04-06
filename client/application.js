@@ -265,5 +265,5 @@ function saveToStorage (txt) {
 }
 function restoreFromStorage () {
   if (!window.localStorage) return ''
-  return window.localStorage.getItem('tradjs-searchtext') || ''
+  return window.defaultSearch !== '' ? window.defaultSearch : (window.localStorage.getItem('tradjs-searchtext') || '')
 }

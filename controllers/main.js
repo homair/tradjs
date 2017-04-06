@@ -87,6 +87,9 @@ router.get('/', (req, res) => {
     if (req.query && req.query.v === 'flat') {
       params.display = 'flat'
     }
+
+    params.query = req.query
+
     // ------------------------------------------------
     // Envoi des informations désirées côté client
     // ------------------------------------------------
