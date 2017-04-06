@@ -29,6 +29,10 @@ app.set('view engine', 'pug')
 // set engine for app
 app.engine('pug', require('pug').__express)
 
+// Fonctionne derrière un proxy HTTP (sur heroku ou dev si reverse avec Apache/Nginx).
+// http://expressjs.com/en/guide/behind-proxies.html
+app.set('trust proxy', true)
+
 // compress content
 // @see https://github.com/expressjs/compression for configuration
 app.use(compression())
