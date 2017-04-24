@@ -37,7 +37,7 @@ if (['dev', 'test'].indexOf(process.env.NODE_ENV) === -1) {
 // -------------------------------------------------
 router.post('/update', (req, res) => {
   logger.info('endpoint=update', req.body)
-  if (typeof req.body.key === 'undefined' || typeof req.body.value === 'undefined' || typeof req.body.language === 'undefined') {
+  if (!req.body.key || !req.body.value || !req.body.language) {
     logger.error('endpoint=update, Error : missing datas to update records')
     res.status(500).json({msg: 'Des paramètres sont manquants'})
   } else {
@@ -50,12 +50,12 @@ router.post('/update', (req, res) => {
 // -------------------------------------------------
 router.delete('/delete', (req, res) => {
   logger.info('endpoint=delete', req.body)
-  if (typeof req.body.key === 'undefined') {
+  if (!req.body.key) {
     logger.error('endpoint=delete, Error : missing parameters to delete key')
     res.status(500).json({msg: 'Des paramètres sont manquants'})
   } else {
-    logger.warn(`endpoint=delete, translation key=${req.body.key} deleted !`)
     deleteRoute(req, res)
+    logger.info(`endpoint=delete, translation key=${req.body.key} deleted !`)
   }
 })
 

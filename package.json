@@ -1,6 +1,6 @@
 {
   "name": "tradjs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Homair i18n backend in Node.js",
   "main": "boot.js",
   "repository": {
@@ -19,8 +19,7 @@
     "server": "NODE_ENV=dev PORT=3002 nodemon boot.js",
     "test": "NODE_ENV=test mocha",
     "start": "node boot.js",
-    "dev": "NODE_ENV=dev FLAT_COLLECTION=true node boot.js",
-    "install": "npm i -g webpack"
+    "dev": "NODE_ENV=dev FLAT_COLLECTION=true nodemon boot.js"
   },
   "babel": {
     "presets": [
@@ -39,7 +38,7 @@
   ],
   "dependencies": {
     "babel-core": "^6.9.1",
-    "babel-loader": "^6.2.4",
+    "babel-loader": "^7.0.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-2": "^6.5.0",
     "babel-register": "^6.9.0",
@@ -48,35 +47,35 @@
     "bootstrap": "^4.0.0-alpha.2",
     "colour": "^0.7.1",
     "compression": "^1.6.2",
-    "css-loader": "^0.23.1",
     "csurf": "^1.9.0",
     "express": "^4.14.0",
-    "file-loader": "^0.9.0",
-    "floatthead": "^1.4.2",
+    "floatthead": "^2.0.3",
     "font-awesome": "^4.6.3",
-    "hjs-webpack": "^8.3.0",
     "jquery": "^3.0.0",
     "lodash": "^4.2.0",
-    "mongodb": "^2.1.18",
+    "mongodb": "^2.2.26",
     "morgan": "^1.7.0",
-    "postcss-loader": "^0.9.1",
     "pug": "^2.0.0-beta3",
-    "resolve-url-loader": "^1.6.0",
-    "sass-loader": "^4.0.0",
-    "style-loader": "^0.13.1",
     "tether": "^1.3.4",
-    "winston": "^2.3.0"
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "ab-tool": "^0.2.0",
-    "babel-eslint": "^6.1.2",
+    "babel-eslint": "^7.2.3",
     "chai": "^3.5.0",
-    "mocha": "^2.5.3",
+    "css-loader": "^0.28.0",
+    "file-loader": "^0.11.1",
+    "hjs-webpack": "^9.1.0",
+    "mocha": "^3.2.0",
     "mysql": "^2.11.1",
-    "node-sass": "^3.8.0",
-    "sinon": "^1.17.4",
-    "sinon-chai": "^2.8.0",
-    "supertest": "^1.2.0",
+    "node-sass": "^4.5.2",
+    "postcss-loader": "^1.3.3",
+    "resolve-url-loader": "^2.0.2",
+    "sass-loader": "^6.0.3",
+    "sinon": "^2.1.0",
+    "sinon-chai": "^2.9.0",
+    "style-loader": "^0.16.1",
+    "supertest": "^3.0.0",
     "unfluff": "^1.1.0"
   }
 }

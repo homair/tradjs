@@ -22,8 +22,8 @@ $(document).ready(function () {
   // Mise en place de la modal au clic sur une ligne
   // ----------------------------------------------------------------------------------
   $('.modTrig').on('click', function () {
-    const $tr = $(this).closest('tr')
-    editedId = $tr.data('key')
+    const $tr = $(this).closest('tr.line')
+    editedId = $tr.attr('id')
 
     $('#myModal').modal('show')
     $('.modal-title').html('Clé : ' + $tr.data('key'))
@@ -39,7 +39,7 @@ $(document).ready(function () {
   $('#myModal').on('hidden.bs.modal', function () {
     $(this).find('textarea').each(function () {
       const lang = $(this).data('lang')
-      $('tr[data-key="' + editedId + '"] td[data-lang="' + lang + '"]').append($(this))
+      $('tr[id="' + editedId + '"] td[data-lang="' + lang + '"]').append($(this))
     })
   })
 
@@ -57,7 +57,7 @@ $(document).ready(function () {
         $.ajax({
           type: 'POST',
           url: window.location.origin + '/update',
-          data: {'key': $(this).attr('data-key'), 'value': $(this).val(), 'language': $(this).attr('data-lang')},
+          data: {'_id': $(this).data('id'), 'key': $(this).data('key'), 'value': $(this).val(), 'language': $(this).data('lang')},
           timeout: 3000,
           success: function (data) {
             if (data === 'ok') {
@@ -87,8 +87,7 @@ $(document).ready(function () {
           timeout: 3000,
           success: function (data) {
             if (data === 'ok') {
-              console.log(data)
-              removeLine(key.replace(/\./gi, '-'))
+              removeLine(key)
             }
           },
           error: function (err) {
@@ -113,22 +112,26 @@ $(document).ready(function () {
       recherche(search)
     }
   })
-  .on('focus', function () {
-    // Préselectionne le texte de la zone pour remplacement rapide.
-    $(this).select()
-  })
-  // $('input.search').focus()
+    .on('focus', function () {
+      // Préselectionne le texte de la zone pour remplacement rapide.
+      $(this).select()
+    })
+    // $('input.search').focus()
 
+  // RESET search.
   $('#reset-search').on('click', function () {
     $('#searching').val('')
     resetSearch()
   })
 
+  // Show untranslated keys.
   $('#suk').on('click', function () {
     if ($('#suk').hasClass('switch-on')) {
       window.location = '/'
+      $('#suk').html('Show untranslated keys')
     } else {
       window.location = '/?v=flat'
+      $('#suk').html('Hide untranslated keys')
     }
   })
 
@@ -140,15 +143,19 @@ $(document).ready(function () {
   })
 
   // -----------------------------------------------------------------------------
-  // Réuni les racines des clés sous forme de th pliantes et dépliantes
+  // Réunit les racines des clés sous forme de th pliantes et dépliantes
   // -----------------------------------------------------------------------------
   if ($('#tab_logic').data('regroup') === 1) {
     regroupLabels()
   } else {
     $('#suk').addClass('switch-on')
+    $('#suk').html('Hide untranslated keys')
+
     $('textarea').filter(function () {
       if ($.trim($(this).text()) === '') {
-        $(this).addClass('highlight').closest('tr').addClass('highlight')
+        $(this).addClass('highlight').closest('tr').show().addClass('highlight')
+      } else {
+        $(this).closest('tr').hide()
       }
     })
   }
@@ -160,65 +167,72 @@ $(document).ready(function () {
   }
 })
 
+// ==============================================================================================
+
 function recherche (search) {
   $('tbody tr').hide()
-  $('tbody tr[id*="' + search + '"]').show()
+  $('tbody tr[data-key*="' + search + '"]').show()
   $('tbody textarea').removeClass('found')
   // $('tbody textarea').filter().addClass('found').closest('tr').show()
   var re = new RegExp(search, 'ig')
   var ta = $('textarea').filter(function () { return re.test($(this).val()) })
-  console.log(ta.length)
   ta.closest('tr').show()
 }
 
 function resetGrouppedSearch () {
   $('tbody tr td textarea').removeClass('found')
   if ($('th.pliage').hasClass('pliage')) {
-    $('tr[id*="row_"]').hide()
+    $('tr.line').hide()
     $('tbody tr[class="affichage"]').show()
     $('tbody tr[class="affichage_ss_niveau"]').show()
   }
 }
 function resetSearch () {
-  window.location.reload()
+  saveToStorage('')
+  resetGrouppedSearch('')
 }
 
-function removeLine (idRow) {
-  $('#row_' + idRow).remove()
+function removeLine (key) {
+  $('tr.line[data-key="' + key + '"]').remove()
 }
 
 function regroupLabels () {
-  console.log('Entered regroupLabels')
   let racine = ''
   let racinessniveau = ''
 
-  $('tr').find('span[id*="data"]').each(function (index, element) {
-    let key = $(element).data().key
+  $('tr.line span.key').each(function (index, element) {
+    let $this = $(this)
+    let key = $this.data('key')
+
     let arrayOfKey = key.split('.')
 
+    // On pose un niveau (pliable)
     if (racine !== arrayOfKey[0]) {
       racine = arrayOfKey[0]
-      $(element).closest('tr').before('<tr class="affichage"><th class="pliage" data-root="' + racine + '">' + racine + '<span class="fa fa-chevron-down" aria-hidden="true"></span>' + '</th></tr>')
+      $this.closest('tr').before(`<tr class="affichage"><th class="pliage" data-root="${racine}">${racine}<span class="fa fa-chevron-down" aria-hidden="true"></span></th></tr>`)
     }
+
+    // On pose un sous-niveau (pliable)
     if (racinessniveau !== arrayOfKey[1]) {
       racinessniveau = arrayOfKey[1]
-      if (typeof racinessniveau === 'undefined') return
-      $(element).closest('tr').before('<tr class="affichage_ss_niveau"><th class="pliage_ss_niveau" data-root="' + racine + '-' + racinessniveau + '">' + racine + '.' + racinessniveau + '<span class="fa fa-chevron-down" aria-hidden="true"></span>' + '</th></tr>')
-      $('tr[id*="' + racine + '-' + racinessniveau + '"]').addClass('pliage_spec')
+      if (!racinessniveau) return
+      $this.closest('tr').before(`<tr class="affichage_ss_niveau"><th class="pliage_ss_niveau" data-root="${racine}.${racinessniveau}">${racine}.${racinessniveau}<span class="fa fa-chevron-down" aria-hidden="true"></span></th></tr>`)
+      $(`tr[data-key*="${racine}.${racinessniveau}"]`).addClass('pliage_spec')
     }
   })
 
-   /* ----- Pliage et dépliage des lignes au moment du clic pour le premier niveau ------- */
+  /* ----- Pliage et dépliage des lignes au moment du clic pour le premier niveau ------- */
   $('th.pliage').on('click', function () {
     const $this = $(this)
+    const dataRoot = $this.data('root')
     if ($this.hasClass('accordeon')) {
       $('.fa-chevron-up', $this).hide()
       $('.fa-chevron-down', $this).show()
       $('.fa-chevron-up', $('th.pliage_ss_niveau')).hide()
 
-      $('th.pliage_ss_niveau[data-root^="' + $this.data('root') + '"]').hide()
-      $('tr[id^="row_' + $this.data('root') + '"]').not('.pliage_spec').hide()
-      $('tr[id^="row_' + $this.data('root') + '"]').hide()
+      $('th.pliage_ss_niveau[data-root^="' + dataRoot + '"]').hide()
+      $('tr[data-key^="' + dataRoot + '"]').not('.pliage_spec').hide()
+      $('tr[data-key^="' + dataRoot + '"]').hide()
       $this.removeClass('accordeon')
       return
     }
@@ -227,8 +241,8 @@ function regroupLabels () {
       $this.append('<span class="fa fa-chevron-up" aria-hidden="true"></span>')
       $('.fa-chevron-down', $('th.pliage_ss_niveau')).show()
 
-      $('th.pliage_ss_niveau[data-root^="' + $this.data('root') + '"]').show()
-      $('tr[id^="row_' + $this.data('root') + '"]').not('.pliage_spec').show()
+      $('th.pliage_ss_niveau[data-root^="' + dataRoot + '"]').show()
+      $('tr[data-key^="' + dataRoot + '"]').not('.pliage_spec').show()
       $this.addClass('accordeon')
     }
   })
@@ -236,11 +250,12 @@ function regroupLabels () {
   /* ----- Pliage et dépliage des lignes au moment du clic pour le deuxième niveau ------- */
   $('th.pliage_ss_niveau').on('click', function () {
     const $this = $(this)
+    const dataRoot = $this.data('root')
     if ($this.hasClass('accordeon_ss_niveau')) {
       $('.fa-chevron-up', $this).hide()
       $('.fa-chevron-down', $this).show()
 
-      $('tr[id^="row_' + $this.data('root') + '"]').hide()
+      $('tr[data-key^="' + dataRoot + '"]').hide()
       $this.removeClass('accordeon_ss_niveau')
       return
     }
@@ -248,7 +263,7 @@ function regroupLabels () {
       $('.fa-chevron-down', $this).hide()
       $this.append('<span class="fa fa-chevron-up" aria-hidden="true"></span>')
 
-      $('tr[id^="row_' + $this.data('root') + '"]').show()
+      $('tr[data-key^="' + dataRoot + '"]').show()
       $this.addClass('accordeon_ss_niveau')
     }
   })
@@ -256,12 +271,13 @@ function regroupLabels () {
   // $('tbody tr th[class="pliage"]').addClass('col-lg-12')
   // $('tbody tr th[class="pliage_ss_niveau"]').addClass('col-lg-12')
   $('th.pliage_ss_niveau').hide()
-  $('tr[id*="row"]').hide()
+  $('tr.line').hide()
 }
 
 function saveToStorage (txt) {
   if (!window.localStorage) return
-  window.localStorage.setItem('tradjs-searchtext', txt)
+  if (txt) window.localStorage.setItem('tradjs-searchtext', txt)
+  else window.localStorage.removeItem('tradjs-searchtext')
 }
 function restoreFromStorage () {
   if (!window.localStorage) return ''

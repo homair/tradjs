@@ -8,7 +8,7 @@ block content
           h4.modal-title
         .modal-body
           each lang, keyLang in listeLang
-            .form-group(data-lang=keyLang)
+            .form-group(data-lang= keyLang)
               label.
                 Langue : #{keyLang}
         .modal-footer
@@ -27,16 +27,16 @@ block content
 
         tbody
           each valTab in results
-            tr.line(id='row_'+ valTab.key.replace(/\./gi, '-'), data-key=valTab.key)
+            tr.line(id='row_' + valTab.key, data-key= valTab.key)
               th.modTrig
-                span.key(id='data.'+valTab.key, data-key=valTab.key)=valTab.key
+                span.key(id= valTab._id, data-key=valTab.key)= valTab.key.substr(5)
 
               each lang, keyLang in listeLang
                 td.modTrig(data-lang=keyLang)
-                  textarea.form-control(data-key='data.'+valTab.key, data-lang=keyLang, rows=1)=valTab[keyLang]||''
+                  textarea.form-control(data-id= valTab[keyLang] ? valTab[keyLang]._id : '', data-key= valTab.key, data-lang=keyLang, rows=1)= valTab[keyLang] ? valTab[keyLang].value : ''
 
               td
-                button.closed(id='btn_'+valTab.key, type='button', value='Supprimer', data-inputkey=valTab.key, data-dismiss='alert', data-confirm='confirmation')
+                button.closed(id='btn_' + valTab.key, type='button', value='Supprimer', data-inputkey= valTab.key, data-dismiss='alert', data-confirm='confirmation')
                   span.cross(aria-hidden='true') x
                   span.sr-only Close
 
