@@ -14,8 +14,10 @@
 // `node_modules` entraînera leur configuration automatique.
 
 var getConfig = require('hjs-webpack')
+const isDev = process.env.NODE_ENV !== 'production'
+console.log('isDev  ', isDev)
 
-module.exports = getConfig({
+var config = getConfig({
   hot: false,
   html: false,
   in: 'client/application.js',
@@ -27,3 +29,12 @@ module.exports = getConfig({
   },
   isDev: false
 })
+
+if (isDev) {
+  // Semble mieux fonctionner avec les devtools de Chrome, sinon
+  // on pointe toujours sur la version app.js, pas sur les sources.
+  config.devtool = 'inline-source-map'
+  config.devServer = undefined
+}
+
+module.exports = config

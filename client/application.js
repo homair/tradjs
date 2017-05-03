@@ -16,7 +16,6 @@ import './styles/app.scss'
 
 $(document).ready(function () {
   let editedId
-  var _inputSearch = $('input.search')
 
   // ----------------------------------------------------------------------------------
   // Mise en place de la modal au clic sur une ligne
@@ -67,7 +66,7 @@ $(document).ready(function () {
             }
           },
           error: function (err) {
-            bootbox.alert('Error while updating data : ' + err)
+            bootbox.alert('Error while updating data : ' + JSON.stringify(err))
           }
         })
       }
@@ -101,6 +100,7 @@ $(document).ready(function () {
   // -------------------------------------------------------------------------------
   // Mise en place de la recherche
   // -------------------------------------------------------------------------------
+  var _inputSearch = $('input.search')
   _inputSearch.on('keyup', function () {
     let search = $(this).val()
 
@@ -143,31 +143,40 @@ $(document).ready(function () {
   })
 
   // -----------------------------------------------------------------------------
-  // Réunit les racines des clés sous forme de th pliantes et dépliantes
+  // Init
   // -----------------------------------------------------------------------------
+  init()
+})
+
+// ==============================================================================================
+function init () {
   if ($('#tab_logic').data('regroup') === 1) {
     regroupLabels()
   } else {
     $('#suk').addClass('switch-on')
     $('#suk').html('Hide untranslated keys')
 
+    // Filtre des textes non traduits.
     $('textarea').filter(function () {
-      if ($.trim($(this).text()) === '') {
-        $(this).addClass('highlight').closest('tr').show().addClass('highlight')
+      var $txtarea = $(this)
+      var $tr = $txtarea.closest('tr')
+      var txt = $txtarea.text().trim()
+      if (txt === '' || txt === $tr.data('key').replace('data.', '')) {
+        // $txtarea.addClass('highlight')
+        $tr.show().addClass('highlight')
       } else {
-        $(this).closest('tr').hide()
+        $tr.hide()
       }
     })
   }
 
   var oldVal = restoreFromStorage()
   if (oldVal) {
+    var _inputSearch = $('input.search')
     _inputSearch.val(oldVal)
     recherche(oldVal)
   }
-})
-
-// ==============================================================================================
+}
 
 function recherche (search) {
   $('tbody tr').hide()
@@ -186,6 +195,7 @@ function resetGrouppedSearch () {
     $('tbody tr[class="affichage"]').show()
     $('tbody tr[class="affichage_ss_niveau"]').show()
   }
+  init()
 }
 function resetSearch () {
   saveToStorage('')
@@ -200,23 +210,24 @@ function regroupLabels () {
   let racine = ''
   let racinessniveau = ''
 
-  $('tr.line span.key').each(function (index, element) {
-    let $this = $(this)
-    let key = $this.data('key')
+  $('tr.line').each(function (index, element) {
+    let $tr = $(this)
+    let $span = $('span.key', $tr)
+    let key = $span.data('key')
 
     let arrayOfKey = key.split('.')
 
     // On pose un niveau (pliable)
     if (racine !== arrayOfKey[0]) {
       racine = arrayOfKey[0]
-      $this.closest('tr').before(`<tr class="affichage"><th class="pliage" data-root="${racine}">${racine}<span class="fa fa-chevron-down" aria-hidden="true"></span></th></tr>`)
+      $tr.before(`<tr class="affichage"><th class="pliage" data-root="${racine}">${racine}<span class="fa fa-chevron-down" aria-hidden="true"></span></th></tr>`)
     }
 
     // On pose un sous-niveau (pliable)
     if (racinessniveau !== arrayOfKey[1]) {
       racinessniveau = arrayOfKey[1]
       if (!racinessniveau) return
-      $this.closest('tr').before(`<tr class="affichage_ss_niveau"><th class="pliage_ss_niveau" data-root="${racine}.${racinessniveau}">${racine}.${racinessniveau}<span class="fa fa-chevron-down" aria-hidden="true"></span></th></tr>`)
+      $tr.before(`<tr class="affichage_ss_niveau"><th class="pliage_ss_niveau" data-root="${racine}.${racinessniveau}">${racine}.${racinessniveau}<span class="fa fa-chevron-down" aria-hidden="true"></span></th></tr>`)
       $(`tr[data-key*="${racine}.${racinessniveau}"]`).addClass('pliage_spec')
     }
   })
