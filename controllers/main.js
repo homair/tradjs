@@ -37,7 +37,7 @@ if (['dev', 'test'].indexOf(process.env.NODE_ENV) === -1) {
 // -------------------------------------------------
 router.post('/update', (req, res) => {
   logger.info('endpoint=update', req.body)
-  if (!req.body.key || !req.body.value || !req.body.language) {
+  if (!req.body.key || !req.body.language) {
     logger.error('endpoint=update, Error : missing datas to update records')
     res.status(500).json({msg: 'Des paramètres sont manquants'})
   } else {
