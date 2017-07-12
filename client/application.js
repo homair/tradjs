@@ -126,12 +126,16 @@ $(document).ready(function () {
 
   // Show untranslated keys.
   $('#suk').on('click', function () {
-    if ($('#suk').hasClass('switch-on')) {
+    if ($('#suk').hasClass('btn-success')) {
       window.location = '/'
-      $('#suk').html('Show untranslated keys')
+      $('#suk')
+        .html('Show untranslated keys')
+        .removeClass('btn-success').addClass('btn-primary')
     } else {
       window.location = '/?v=flat'
-      $('#suk').html('Hide untranslated keys')
+      $('#suk')
+        .html('Reset untranslated filter')
+        .addClass('btn-success').removeClass('btn-primary')
     }
   })
 
@@ -153,8 +157,8 @@ function init () {
   if ($('#tab_logic').data('regroup') === 1) {
     regroupLabels()
   } else {
-    $('#suk').addClass('switch-on')
-    $('#suk').html('Hide untranslated keys')
+    $('#suk').addClass('btn-success').removeClass('btn-primary')
+    $('#suk').html('Reset untranslated filter')
 
     // Filtre des textes non traduits.
     $('textarea').filter(function () {
@@ -179,6 +183,7 @@ function init () {
 }
 
 function recherche (search) {
+  search = search.replace('*', '.*')
   $('tbody tr').hide()
   $('tbody tr[data-key*="' + search + '"]').show()
   $('tbody textarea').removeClass('found')
@@ -190,11 +195,11 @@ function recherche (search) {
 
 function resetGrouppedSearch () {
   $('tbody tr td textarea').removeClass('found')
-  if ($('th.pliage').hasClass('pliage')) {
-    $('tr.line').hide()
-    $('tbody tr[class="affichage"]').show()
-    $('tbody tr[class="affichage_ss_niveau"]').show()
-  }
+  // if ($('th.pliage').hasClass('pliage')) {
+  //   $('tr.line').hide()
+  //   $('tbody tr[class="affichage"]').show()
+  //   $('tbody tr[class="affichage_ss_niveau"]').show()
+  // }
   init()
 }
 function resetSearch () {
@@ -207,8 +212,15 @@ function removeLine (key) {
 }
 
 function regroupLabels () {
-  let racine = ''
   let racinessniveau = ''
+  let racine = ''
+
+  if ($('.affichage').length > 0) {
+    // Called when search is resetted.
+    $('tr.line').hide()
+    $('tr.affichage, tr.affichage_ss_niveau').show()
+    return
+  }
 
   $('tr.line').each(function (index, element) {
     let $tr = $(this)
@@ -217,7 +229,7 @@ function regroupLabels () {
 
     let arrayOfKey = key.split('.')
 
-    // On pose un niveau (pliable)
+    // On pose le niveau racine chaque fois qu'une nouvelle racine est rencontrée.
     if (racine !== arrayOfKey[0]) {
       racine = arrayOfKey[0]
       $tr.before(`<tr class="affichage"><th class="pliage" data-root="${racine}">${racine}<span class="fa fa-chevron-down" aria-hidden="true"></span></th></tr>`)
@@ -281,7 +293,7 @@ function regroupLabels () {
 
   // $('tbody tr th[class="pliage"]').addClass('col-lg-12')
   // $('tbody tr th[class="pliage_ss_niveau"]').addClass('col-lg-12')
-  $('th.pliage_ss_niveau').hide()
+  // $('th.pliage_ss_niveau').hide()
   $('tr.line').hide()
 }
 

@@ -1,124 +1,85 @@
-.wrapper
-{
-   overflow: auto;
+.wrapper {
+  overflow: auto;
 }
-
-table.table-bordered
-{
-  tbody
-  {
+table.table-bordered {
+  tbody {
     th {
       padding: 5px 0.75em;
-
     }
-    td
-    {
+    td {
       padding: 0;
     }
-    tr:hover
-    {
+    tr:hover {
       cursor: pointer;
-      background-color:#ccd9ff;
+      background-color: #ccd9ff;
     }
-
-
-    .form-control:disabled, .form-control
-    {
+    .form-control:disabled, .form-control {
       border: 0;
       border-radius: 0;
       background-color: #fff;
     }
   }
 }
-
-table
-{
+table {
   border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
   margin: auto;
-  thead
-  {
-    font-weight:bold;
-  }
 
+  thead {
+    font-weight: bold;
+  }
   tbody {
     th {
       font-size: 12px;
     }
-
-    td
-    {
+    td {
       text-align: center;
     }
-    textarea
-      {
+    textarea {
       resize: none;
-      }
     }
   }
-
-input
-{
+}
+input {
   text-align: center;
 }
-
-button
-{
+button {
   text-align: center
 }
-
-.title
-{
+.title {
   text-align: center
 }
-
-.class
-{
+.class {
   background-color: lightgreen;
 }
-
-.class1
-{
-  background-color : white;
-  -webkit-transition-property:  background-color;
-  -webkit-transition-duration:  2s;
-  -webkit-transition-timing-function : ease;
-  transition-property:  background-color;
-  transition-duration:  2s;
-  transition-timing-function : ease;
+.class1 {
+  background-color: white;
+  -webkit-transition-property: background-color;
+  -webkit-transition-duration: 2s;
+  -webkit-transition-timing-function: ease;
+  transition-property: background-color;
+  transition-duration: 2s;
+  transition-timing-function: ease;
 }
-
 .table-sortable tbody tr {
   cursor: move;
 }
-
-.color
-{
-  background-color:#004d73;
+.color {
+  background-color: #004d73;
 }
-
-.modal-header
-{
-  background-color:#004d73;
+.modal-header {
+  background-color: #004d73;
   color: white;
 }
-
-.cross
-{
-  color:#ff1a1a;
+.cross {
+  color: #ff1a1a;
 }
-
-.found
-{
+.found {
   border: 1px red solid;
 }
-
-#myModal
-{
+#myModal {
   display: none;
 }
-
-.closed
-{
+.closed {
   font-size: 2rem;
   font-weight: 700;
   line-height: 1;
@@ -126,32 +87,24 @@ button
   background: transparent;
   border: 0;
 }
-
-.pliage
-{
-  background-color:#414c5d;
+.pliage {
+  background-color: #414c5d;
   color: white;
 }
-
-.pliage_ss_niveau
-{
-  background-color:#DDD;
+.pliage_ss_niveau {
+  background-color: #DDD;
 }
-
 .stylehead {
-  background-color:#004d73;
+  background-color: #004d73;
   text-align: center;
-  padding:5px;
+  padding: 5px;
   heigth: 70px;
 }
-
 .title {
   font-size: 25px;
   color: white;
 }
-
-.search
-{
+.search {
   display: block;
   padding: .375rem .75rem;
   font-size: 1rem;
@@ -160,37 +113,34 @@ button
   background-color: #fff;
   background-image: none;
   border: 1px solid #ccc;
+  width: 300px;
+  &:focus{
+    width: 600px;
+  }
 }
-.fa-chevron-down
-{
-  float : right;
+#reset-search{
+  cursor: pointer;
+  margin-right: 20px;
+}
+.fa-chevron-down {
+  float: right;
+}
+.fa-chevron-up {
+  float: right;
+}
+.fa-search {
+  width: 27px;
 }
 
-.fa-chevron-up
-{
-  float : right;
-}
-
-.fa-search
-{
- width: 27px;
-}
-
-.input-group
-{
+.input-group {
   border-collapse: collapse;
 }
-
-
 button.show-untranslated {
-
 }
-
 button.switch-on {
-  background-color:green;
-  color:white;
+  background-color: green;
+  color: white;
 }
-
 tr.highlight {
   background-color: #ffddae !important;
 }

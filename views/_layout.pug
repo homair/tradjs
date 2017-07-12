@@ -8,8 +8,8 @@ html
   body
     header
       .row.stylehead
-        .col-md-6.title='Gestion des traductions'
-        .col-md-3
+        .col-md-3.title='Gestion des traductions'
+        .col-md-9
           form.form-inline
             .form-group
               .input-group
@@ -18,8 +18,7 @@ html
                 input.search(id='searching', type='text', name='search', placeholder='Rechercher...', value=query.search)
                 #reset-search.input-group-addon
                   span.fa.fa-close(aria-hidden="true")
-        .col-md-3
-          button#suk Show untranslated keys
+            button.btn.btn-primary(type="button")#suk Show untranslated keys
 
     table.table-bordered.table-inverse
 

@@ -16,10 +16,10 @@
   "scripts": {
     "build": "webpack",
     "client": "webpack --watch --progress",
-    "server": "NODE_ENV=dev PORT=3002 nodemon boot.js",
+    "server": "NODE_ENV=dev PORT=3006 nodemon boot.js",
     "test": "NODE_ENV=test mocha",
     "start": "node boot.js",
-    "dev": "NODE_ENV=dev FLAT_COLLECTION=true nodemon boot.js"
+    "dev": "FLAT_COLLECTION=true npm run server"
   },
   "babel": {
     "presets": [
