@@ -10,19 +10,19 @@ const config = {
   authorizedIps: ['127.0.0.1', '195.25.103.29'],
   langs: {
     'fr': {
-      'label': 'Français',
+      'label': 'French',
       'order': 0
     },
     'en': {
-      'label': 'Anglais',
+      'label': 'English',
       'order': 1
     },
     'de': {
-      'label': 'Allemand',
+      'label': 'German',
       'order': 2
     },
     'es': {
-      'label': 'Espagnol',
+      'label': 'Spanish',
       'order': 3
     },
     'it': {
@@ -30,12 +30,16 @@ const config = {
       'order': 4
     },
     'nl': {
-      'label': 'Hollandais',
+      'label': 'Dutch',
+      'order': 5
+    },
+    'pl': {
+      'label': 'Polish',
       'order': 5
     }
   },
   // order to sort docs
-  lang_order: ['fr', 'en', 'de', 'es', 'it', 'nl'],
+  lang_order: ['fr', 'en', 'de', 'es', 'it', 'nl', 'pl'],
   flat_collection: process.env.FLAT_COLLECTION === 'true',  // ### => false | true
   translationNamespace: 'translation'
 }
