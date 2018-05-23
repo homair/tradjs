@@ -184,9 +184,9 @@ function init () {
 
 function recherche (search) {
   search = search.replace('*', '.*')
-  $('tbody tr').hide()
-  $('tbody tr[data-key*="' + search + '"]').show()
-  $('tbody textarea').removeClass('found')
+  $('tr').hide()
+  $('tr[data-key*="' + search + '"]').show()
+  $('textarea').removeClass('found')
   // $('tbody textarea').filter().addClass('found').closest('tr').show()
   var re = new RegExp(search, 'ig')
   var ta = $('textarea').filter(function () { return re.test($(this).val()) })
@@ -194,7 +194,7 @@ function recherche (search) {
 }
 
 function resetGrouppedSearch () {
-  $('tbody tr td textarea').removeClass('found')
+  $('textarea').removeClass('found')
   // if ($('th.pliage').hasClass('pliage')) {
   //   $('tr.line').hide()
   //   $('tbody tr[class="affichage"]').show()

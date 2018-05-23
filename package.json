@@ -1,6 +1,6 @@
 {
   "name": "tradjs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Homair i18n backend in Node.js",
   "main": "boot.js",
   "repository": {
