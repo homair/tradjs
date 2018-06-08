@@ -7,7 +7,8 @@ require('floatthead')
 import tether from 'tether'
 window.Tether = tether
 
-require('bootstrap')
+// require('bootstrap')
+import 'bootstrap/js/dist/modal'
 
 import bootbox from 'bootbox'
 
@@ -155,7 +156,7 @@ $(document).ready(function () {
 // ==============================================================================================
 function init () {
   if ($('#tab_logic').data('regroup') === 1) {
-    regroupLabels()
+  //  regroupLabels()
   } else {
     $('#suk').addClass('btn-success').removeClass('btn-primary')
     $('#suk').html('Reset untranslated filter')

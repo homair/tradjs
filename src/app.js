@@ -14,7 +14,7 @@ import mainController from './controllers/main'
 // Crée le conteneur principal de web app (`app`), connecte le serveur HTTP dessus
 // (`server`) et détermine le chemin complet des assets statiques.
 const app = express()
-const publicPath = joinPaths(__dirname, 'public')
+const publicPath = joinPaths(__dirname, '..', 'public')
 
 // Configuration
 // -------------
@@ -22,6 +22,8 @@ const publicPath = joinPaths(__dirname, 'public')
 // Configuration et middleware pour tous les environnements (dev, prod, etc.)
 app.set('port', config.port)
 app.set('view engine', 'pug')
+app.set('views', joinPaths(process.cwd(), '/src/views'))
+
 // if (process.env.NODE_ENV === 'production') {
 //   app.set('view cache', true)
 // }

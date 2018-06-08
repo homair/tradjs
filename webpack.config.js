@@ -1,40 +1,74 @@
-// Configuration Webpack
-// =====================
+const merge = require('webpack-merge')
+const parts = require('./webpack.config.parts')
+const Path = require('path')
 
-// La configuration de Webpack peut être assez velue…
-// Pour simplifier notre propre code de configuration,
-// une bonne solution consiste à passer par
-// [hjs-webpack](https://github.com/HenrikJoreteg/hjs-webpack),
-// une surcouche de Henrik Joreteg.  On peut se contenter
-// d’indiquer de quel fichier source partir, où publier
-// les fichiers de production en cas de build, éventuellement
-// si on souhaite du HTTPS, et on est prêts à partir.
-// La simple présence des principaux plugins et loaders
-// Webpack dans le fichier `package.json` et le dossier
-// `node_modules` entraînera leur configuration automatique.
+var PACKAGE = require('./package.json')
+var version = PACKAGE.version
 
-var getConfig = require('hjs-webpack')
-const isDev = process.env.NODE_ENV !== 'production'
-console.log('isDev  ', isDev)
-
-var config = getConfig({
-  hot: false,
-  html: false,
-  in: 'client/application.js',
-  out: 'public',
-  clearBeforeBuild: '!(images|fonts|favicon.ico|font-awesome.min.css)',
-  output: {
-    /* filename: 'tradjs.1.0.0.js', */
-    path: __dirname + '/public'
-  },
-  isDev: false
-})
-
-if (isDev) {
-  // Semble mieux fonctionner avec les devtools de Chrome, sinon
-  // on pointe toujours sur la version app.js, pas sur les sources.
-  config.devtool = 'inline-source-map'
-  config.devServer = undefined
+const PATHS = {
+  build: Path.resolve(__dirname, 'public'),
+  source: Path.resolve(__dirname, 'client')
 }
 
-module.exports = config
+const coreConfig = merge(
+  {
+    mode: !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? 'development' : 'production',
+    entry: {
+      tradjs: [PATHS.source] /* 'babel-polyfill', */
+    },
+    output: {
+      devtoolModuleFilenameTemplate: 'webpack:///[resource-path]',
+      filename: '[name].js',
+      path: PATHS.build,
+      publicPath: '/'
+    },
+    optimization: {
+      // https://webpack.js.org/configuration/optimization/#optimization-runtimechunk
+      runtimeChunk: false
+      // https://webpack.js.org/plugins/split-chunks-plugin/#defaults
+      // splitChunks: {
+      //   chunks: 'all'
+      // }
+    }
+  },
+  parts.generateSourceMaps(),
+  parts.babelize({
+    include: PATHS.source,
+    options: { plugins: ['syntax-dynamic-import'] }
+  }),
+  parts.ignoreMomentLocales()
+  // parts.loadImages(),
+  // parts.loadFonts(),
+  // parts.html({ title: 'Webpack 4 - Premiers Pas' }),
+  // parts.safeAssets(),
+  // parts.useModuleLevelCache()
+)
+
+const devConfig = () =>
+  merge.smart(
+    coreConfig,
+    parts.dashboard(),
+    // parts.devServer({ port: 3004 }),
+    parts.loadCSS({ modules: true }),
+    parts.loadSASS({ modules: true })
+  )
+
+const prodConfig = () =>
+  merge.smart(
+    parts.cleanDist([PATHS.build]),
+    coreConfig,
+    {
+      output: {
+        // .[chunkhash:8]
+        filename: '[name].' + version + '.js'
+      }
+    },
+    parts.generateSourceMaps('source-map'),
+    parts.extractCSS({ modules: true }),
+    parts.extractSASS({ modules: true }),
+    // parts.optimizeImages(),
+    parts.compressTextFiles()
+  )
+
+module.exports = (env = process.env.NODE_ENV) =>
+  env === 'production' ? prodConfig() : devConfig()

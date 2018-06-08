@@ -4,13 +4,13 @@ import config from '../config'
 let _db = false
 
 export function connect (callback) {
-  MongoClient.connect(config.db.mongodb, (err, db) => {
+  MongoClient.connect(config.db.mongodb.uri, (err, client) => {
     if (err) {
       return callback(err)
     }
 
-    _db = db
-    return callback(null, db)
+    _db = client.db(config.db.mongodb.dbname)
+    return callback(null, _db)
   })
 }
 

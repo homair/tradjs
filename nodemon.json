@@ -3,7 +3,7 @@
   "ignore": [
     ".gitignore", ".git",
     "client", "node_modules", "public", "test",
-    "webpack.config.js"
+    "webpack.config.js", "webpack.config.parts.js"
   ],
   "watch": "*"
 }
