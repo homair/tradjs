@@ -3,24 +3,33 @@ html
   head
     title.
       Gestion des traductions
-    link(rel='stylesheet', href='/tradjs.2.0.0.css')
+    if (process.env.NODE_ENV === 'production')
+      link(rel='stylesheet', href='/tradjs.2.0.0.css')
     link(rel='stylesheet', href='/font-awesome.min.css')
   body
     header
       .row.stylehead
         .col-md-3.title='Gestion des traductions'
-        .col-md-9
+        .col-md-6
           form.form-inline
             .form-group
               .input-group
-                .input-group-addon
-                  span.fa.fa-search(aria-hidden="true")
+                .input-group-prepend
+                  .input-group-text
+                    span.fa.fa-search(aria-hidden="true")
                 input.search(id='searching', type='text', name='search', placeholder='Rechercher...', value=query.search)
-                #reset-search.input-group-addon
-                  span.fa.fa-close(aria-hidden="true")
+                #reset-search.input-group-append
+                  .input-group-text
+                    span.fa.fa-close(aria-hidden="true")
             button.btn.btn-primary(type="button")#suk Show untranslated keys
+        .col-md-3
+          form.form-inline
+            .form-group
+              select.form-control.jqDBSelect
+                option(value='default', selected=(currentDb === 'default')) www.homair.com
+                option(value='assetregister', selected=(currentDb === 'assetregister')) Asset register
 
-    table.table-bordered.table-inverse
+    table.table-bordered.table-dark
 
     .main-content
       block content
@@ -30,5 +39,8 @@ html
 
     script.
       window.defaultSearch = '#{query.search}'
-    script(src='/tradjs.2.0.0.js')
+    if (process.env.NODE_ENV === 'production')
+      script(src='/tradjs.2.0.0.js')
+    else
+      script(src='/tradjs.js')
 

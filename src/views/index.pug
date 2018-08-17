@@ -8,16 +8,17 @@ block content
           h4.modal-title
         .modal-body
           each lang, keyLang in listeLang
-            .form-group(data-lang= keyLang)
-              label.
-                Langue : #{keyLang}
+            .form-group.row(data-lang= keyLang)
+              .input-group
+                .input-group-prepend
+                  .input-group-text(style="width: 100px;")= lang.label.toUpperCase()
         .modal-footer
           button.btn.btn-primary(data-dismiss="modal")="Save and close"
 
   center
     .wrapper
       table#tab_logic.table.table-bordered(data-regroup=(display === 'flat' ? 0 : 1))
-        thead.color.table-inverse
+        thead.table-dark
           tr
             th.
              Clés

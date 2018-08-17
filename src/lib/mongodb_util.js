@@ -1,19 +1,28 @@
 import { MongoClient } from 'mongodb'
 import config from '../config'
+// Mutli-databases:
+let _dbByKey = {}
 
-let _db = false
+export const DB_DEFAULT = 'default'
+export const DB_AR = 'assetregister'
 
-export function connect (callback) {
-  MongoClient.connect(config.db.mongodb.uri, (err, client) => {
-    if (err) {
-      return callback(err)
-    }
+export function connect(dbKey, callback) {
+  MongoClient.connect(
+    config.db[dbKey].uri,
+    { useNewUrlParser: true },
+    (err, client) => {
+      if (err) {
+        return callback(err)
+      }
 
-    _db = client.db(config.db.mongodb.dbname)
-    return callback(null, _db)
-  })
+      _dbByKey[dbKey] = client.db(config.db[dbKey].dbname)
+      return callback(null, _dbByKey[dbKey])
+    },
+  )
 }
 
-export function getDb () {
-  return _db
+// Mutli-databases:
+export function getDb(dbKey) {
+  if (!dbKey) dbKey = DB_DEFAULT
+  return _dbByKey[dbKey]
 }

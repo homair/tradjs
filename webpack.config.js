@@ -49,8 +49,8 @@ const devConfig = () =>
     coreConfig,
     parts.dashboard(),
     // parts.devServer({ port: 3004 }),
-    parts.loadCSS({ modules: true }),
-    parts.loadSASS({ modules: true }),
+    parts.loadCSS({ modules: false }),
+    parts.loadSASS({ modules: false }),
   )
 
 const prodConfig = () =>
@@ -64,8 +64,8 @@ const prodConfig = () =>
       },
     },
     parts.generateSourceMaps('source-map'),
-    parts.extractCSS({ modules: true, version }),
-    parts.extractSASS({ modules: true, version }),
+    parts.extractCSS({ modules: false, version }),
+    parts.extractSASS({ modules: false, version }),
     // parts.optimizeImages(),
     parts.compressTextFiles(),
   )

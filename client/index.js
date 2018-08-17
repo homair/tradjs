@@ -7,12 +7,10 @@ require('floatthead')
 import tether from 'tether'
 window.Tether = tether
 
-// require('bootstrap')
-// import '~bootstrap/scss/dist/modal'
+require('bootstrap')
 
 import bootbox from 'bootbox'
 
-import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/app.scss'
 
 $(document).ready(function() {
@@ -29,7 +27,7 @@ $(document).ready(function() {
     $('.modal-title').html('Clé : ' + $tr.data('key'))
     $tr.find('textarea').each(function() {
       const lang = $(this).data('lang')
-      $('.modal-body .form-group[data-lang="' + lang + '"]').append($(this))
+      $('.modal-body .form-group[data-lang="' + lang + '"] .input-group').append($(this))
     })
   })
   $('#myModal').on('shown.bs.modal', function() {
@@ -152,6 +150,14 @@ $(document).ready(function() {
   // ----------------------------------------------------------------------------
   $('table').floatThead({
     position: 'fixed',
+  })
+
+  // ----------------------------------------------------------------------------
+  // DB Selection
+  // ----------------------------------------------------------------------------
+  $('header .jqDBSelect').on('change', function(e) {
+    e.preventDefault()
+    window.location.href = window.location.origin + '/switch-db?db=' + e.target.options[e.target.selectedIndex].value
   })
 
   // -----------------------------------------------------------------------------
