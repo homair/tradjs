@@ -85,11 +85,10 @@ router.get('/switch-db', (req, res) => {
 // Recup de tous les labels
 // -------------------------------------------------
 router.get('/', (req, res) => {
-  console.log('entered main', req.session.currentDb)
   getOrderedDocs(req.session.currentDb, config.langs[req.session.currentDb], function(err, params) {
     if (err) {
-      logger.error('main.js:', err)
-      return res.render('errors/500', err)
+      logger.error('main.js: err=', err)
+      return res.render('errors/500', { msg: err })
     }
 
     // display

@@ -128,19 +128,21 @@ export function getFlatOrderedDocs(dbKey, langs, callback) {
 
       let objReturn = []
       let curr
-      docs.forEach(el => {
-        // store key
-        curr = { key: el.key }
-        // transform values to object indexed on lang
-        const oValues = _.keyBy(el.values, 'lang')
-        // store values in order
-        config.lang_order[dbKey].forEach(lang => {
-          if (oValues[lang] && oValues[lang].value) {
-            curr[lang] = oValues[lang]
-          }
+      if (Array.isArray(docs)) {
+        docs.forEach(el => {
+          // store key
+          curr = { key: el.key }
+          // transform values to object indexed on lang
+          const oValues = _.keyBy(el.values, 'lang')
+          // store values in order
+          config.lang_order[dbKey].forEach(lang => {
+            if (oValues[lang] && oValues[lang].value) {
+              curr[lang] = oValues[lang]
+            }
+          })
+          objReturn.push(curr)
         })
-        objReturn.push(curr)
-      })
+      }
 
       const results = _.sortBy(objReturn, 'key')
 

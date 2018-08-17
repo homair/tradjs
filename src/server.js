@@ -15,10 +15,19 @@ import { DB_DEFAULT, DB_AR, connect as dbConnect } from './lib/mongodb_util'
 const server = createServer(app)
 
 // Connexion à la base
-dbConnect(DB_DEFAULT, (err, db) => {
+dbConnect(DB_DEFAULT, err => {
+  if (err) {
+    logger.error(err)
+    process.exit(-1)
+  }
+
   logger.info('✔ Connection established to '.green + DB_DEFAULT.cyan + ' database'.green)
 
-  dbConnect(DB_AR, (err, db) => {
+  dbConnect(DB_AR, err => {
+    if (err) {
+      logger.error(err)
+      process.exit(-1)
+    }
     logger.info('✔ Connection established to '.green + DB_AR.cyan + ' database'.green)
 
     // Lancement effectif du serveur en écoutant sur le bon port pour des

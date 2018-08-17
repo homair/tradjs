@@ -5,11 +5,11 @@ const config = {
     // Mutli-databases:
     default: {
       uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/honodblive',
-      dbname: 'honodblive',
+      dbname: process.env.MONGODB_NAME || 'honodblive',
     },
     assetregister: {
       uri: process.env.MONGODB_URI_ASSETREGISTER || 'mongodb://localhost:27017/basemh',
-      dbname: 'basemh',
+      dbname: process.env.MONGODB_NAME_ASSETREGISTER || 'basemh',
     },
     root_collection: process.env.ROOT_COLLECTION || 'i18next_flat', // ### => i18next | i18next_flat
   },
