@@ -8,11 +8,11 @@ import tether from 'tether'
 window.Tether = tether
 
 // require('bootstrap')
-import 'bootstrap/js/dist/modal'
+// import '~bootstrap/scss/dist/modal'
 
 import bootbox from 'bootbox'
 
-import 'bootstrap/scss/bootstrap.scss'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/app.scss'
 
 $(document).ready(function() {

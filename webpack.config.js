@@ -7,36 +7,36 @@ var version = PACKAGE.version
 
 const PATHS = {
   build: Path.resolve(__dirname, 'public'),
-  source: Path.resolve(__dirname, 'client')
+  source: Path.resolve(__dirname, 'client'),
 }
 
 const coreConfig = merge(
   {
     mode: !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? 'development' : 'production',
     entry: {
-      tradjs: [PATHS.source] /* 'babel-polyfill', */
+      tradjs: [PATHS.source] /* 'babel-polyfill', */,
     },
     output: {
       devtoolModuleFilenameTemplate: 'webpack:///[resource-path]',
       filename: '[name].js',
       path: PATHS.build,
-      publicPath: '/'
+      publicPath: '/',
     },
     optimization: {
       // https://webpack.js.org/configuration/optimization/#optimization-runtimechunk
-      runtimeChunk: false
+      runtimeChunk: false,
       // https://webpack.js.org/plugins/split-chunks-plugin/#defaults
       // splitChunks: {
       //   chunks: 'all'
       // }
-    }
+    },
   },
   parts.generateSourceMaps(),
   parts.babelize({
     include: PATHS.source,
-    options: { plugins: ['syntax-dynamic-import'] }
+    options: { plugins: ['syntax-dynamic-import'] },
   }),
-  parts.ignoreMomentLocales()
+  parts.ignoreMomentLocales(),
   // parts.loadImages(),
   // parts.loadFonts(),
   // parts.html({ title: 'Webpack 4 - Premiers Pas' }),
@@ -50,25 +50,26 @@ const devConfig = () =>
     parts.dashboard(),
     // parts.devServer({ port: 3004 }),
     parts.loadCSS({ modules: true }),
-    parts.loadSASS({ modules: true })
+    parts.loadSASS({ modules: true }),
   )
 
 const prodConfig = () =>
   merge.smart(
-    parts.cleanDist([PATHS.build]),
+    parts.cleanDist([PATHS.build], { exclude: ['favicon.ico', 'fonts', 'font-awesome.min.css'] }),
     coreConfig,
     {
       output: {
         // .[chunkhash:8]
-        filename: '[name].' + version + '.js'
-      }
+        filename: '[name].' + version + '.js',
+      },
     },
     parts.generateSourceMaps('source-map'),
-    parts.extractCSS({ modules: true }),
-    parts.extractSASS({ modules: true }),
+    parts.extractCSS({ modules: true, version }),
+    parts.extractSASS({ modules: true, version }),
     // parts.optimizeImages(),
-    parts.compressTextFiles()
+    parts.compressTextFiles(),
   )
 
-module.exports = (env = process.env.NODE_ENV) =>
-  env === 'production' ? prodConfig() : devConfig()
+// console.log(require('util').inspect(devConfig(), { depth: 6 }))
+
+module.exports = (env = process.env.NODE_ENV) => (env === 'production' ? prodConfig() : devConfig())

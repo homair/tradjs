@@ -6,15 +6,11 @@ const webpack = require('webpack')
 // Babel
 // -----
 
-exports.babelize = ({
-  include,
-  exclude = /node_modules/,
-  options = {}
-} = {}) => {
+exports.babelize = ({ include, exclude = /node_modules/, options = {} } = {}) => {
   if (options.presets === undefined) {
     options = {
       presets: [['env', { modules: false, useBuiltIns: true }]],
-      ...options
+      ...options,
     }
   }
   if (options === false) {
@@ -31,12 +27,12 @@ exports.babelize = ({
           use: [
             {
               loader: 'babel-loader',
-              options
-            }
-          ]
-        }
-      ]
-    }
+              options,
+            },
+          ],
+        },
+      ],
+    },
   }
 }
 
@@ -50,24 +46,20 @@ exports.lintJS = ({ include, exclude = /node_modules/ } = {}) => ({
         test: /\.jsx?$/,
         include,
         exclude,
-        use: ['eslint-loader']
-      }
-    ]
-  }
+        use: ['eslint-loader'],
+      },
+    ],
+  },
 })
 
 // CSS & SASS
 // ----------
 
-exports.extractCSS = ({ include, exclude, modules }) =>
-  extractStyling({ ext: 'css', include, exclude, modules })
-exports.extractSASS = ({ include, exclude, modules }) =>
-  extractStyling({ ext: 'scss', include, exclude, modules, altLang: 'sass' })
+exports.extractCSS = ({ include, exclude, modules, version }) => extractStyling({ ext: 'css', include, exclude, modules, version })
+exports.extractSASS = ({ include, exclude, modules, version }) => extractStyling({ ext: 'scss', include, exclude, modules, version, altLang: 'sass' })
 
-exports.loadCSS = ({ include, exclude, modules }) =>
-  loadStyling({ ext: 'css', include, exclude, modules })
-exports.loadSASS = ({ include, exclude, modules }) =>
-  loadStyling({ ext: 'scss', include, exclude, modules, altLang: 'sass' })
+exports.loadCSS = ({ include, exclude, modules }) => loadStyling({ ext: 'css', include, exclude, modules })
+exports.loadSASS = ({ include, exclude, modules }) => loadStyling({ ext: 'scss', include, exclude, modules, altLang: 'sass' })
 
 // Images & Fonts
 // --------------
@@ -82,12 +74,12 @@ exports.loadFonts = ({ include, exclude } = {}) => ({
         use: [
           {
             loader: 'url-loader',
-            options: { limit: 10000, name: '[sha256:hash:16].[ext]' }
-          }
-        ]
-      }
-    ]
-  }
+            options: { limit: 10000, name: '[sha256:hash:16].[ext]' },
+          },
+        ],
+      },
+    ],
+  },
 })
 
 exports.loadImages = ({ include, exclude, ieSafeSVGs = true } = {}) => ({
@@ -100,9 +92,9 @@ exports.loadImages = ({ include, exclude, ieSafeSVGs = true } = {}) => ({
         use: [
           {
             loader: 'url-loader',
-            options: { limit: 10000, name: '[sha256:hash:16].[ext]' }
-          }
-        ]
+            options: { limit: 10000, name: '[sha256:hash:16].[ext]' },
+          },
+        ],
       },
       {
         test: /\.svg$/,
@@ -115,16 +107,16 @@ exports.loadImages = ({ include, exclude, ieSafeSVGs = true } = {}) => ({
               iesafe: ieSafeSVGs,
               limit: 10000,
               name: '[sha256:hash:16].[ext]',
-              stripdeclarations: true
-            }
-          }
-        ]
-      }
-    ]
-  }
+              stripdeclarations: true,
+            },
+          },
+        ],
+      },
+    ],
+  },
 })
 
-exports.html = (options) => {
+exports.html = options => {
   const HtmlWebpackPlugin = require('html-webpack-plugin')
   return { plugins: [new HtmlWebpackPlugin(options)] }
 }
@@ -138,34 +130,33 @@ exports.compressTextFiles = (options = {}) => {
     plugins: [
       new ZopfliPlugin({
         test: /\.(?:html|jsx?|css|svg)$/,
-        ...options
-      })
-    ]
+        ...options,
+      }),
+    ],
   }
 }
 
 exports.ignoreDynamicRequiresFor = (requestRegExp, contextRegExp) => ({
-  plugins: [new webpack.IgnorePlugin(requestRegExp, contextRegExp)]
+  plugins: [new webpack.IgnorePlugin(requestRegExp, contextRegExp)],
 })
 
-exports.ignoreMomentLocales = () =>
-  exports.ignoreDynamicRequiresFor(/^\.\/locale$/, /moment$/)
+exports.ignoreMomentLocales = () => exports.ignoreDynamicRequiresFor(/^\.\/locale$/, /moment$/)
 
 exports.optimizeImages = (options = {}) => {
   options = {
     optipng: { enabled: false },
     ...options,
-    mozjpeg: { quality: 75, ...(options.mozjpeg || {}) }
+    mozjpeg: { quality: 75, ...(options.mozjpeg || {}) },
   }
   return {
     module: {
       rules: [
         {
           test: /\.(?:jpe?g|png|gif|svg)$/,
-          use: [{ loader: 'image-webpack-loader', options }]
-        }
-      ]
-    }
+          use: [{ loader: 'image-webpack-loader', options }],
+        },
+      ],
+    },
   }
 }
 
@@ -177,19 +168,12 @@ exports.cleanDist = (paths, options) => {
   return { plugins: [new CleanWebpackPlugin(paths, options)] }
 }
 
-exports.dashboard = (options) => {
+exports.dashboard = options => {
   const WebpackDashboardPlugin = require('webpack-dashboard/plugin')
   return { plugins: [new WebpackDashboardPlugin(options)] }
 }
 
-exports.devServer = ({
-  contentBase,
-  hot = true,
-  https,
-  open,
-  port,
-  proxy
-} = {}) => {
+exports.devServer = ({ contentBase, hot = true, https, open, port, proxy } = {}) => {
   const devServer = {
     contentBase,
     historyApiFallback: true,
@@ -197,15 +181,12 @@ exports.devServer = ({
     noInfo: true,
     overlay: true,
     port,
-    proxy
+    proxy,
   }
 
   const plugins = []
   if (hot) {
-    plugins.push(
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NamedModulesPlugin()
-    )
+    plugins.push(new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin())
   }
 
   if (hot === 'only') {
@@ -223,14 +204,14 @@ exports.devServer = ({
 }
 
 exports.generateSourceMaps = (type = 'eval-source-map') => ({
-  devtool: type
+  devtool: type,
 })
 
 exports.safeAssets = () => ({
-  plugins: [new webpack.NoEmitOnErrorsPlugin()]
+  plugins: [new webpack.NoEmitOnErrorsPlugin()],
 })
 
-exports.useModuleLevelCache = (options) => {
+exports.useModuleLevelCache = options => {
   const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
   return { plugins: [new HardSourceWebpackPlugin(options)] }
 }
@@ -238,23 +219,16 @@ exports.useModuleLevelCache = (options) => {
 // Helper functions
 // ----------------
 
-function buildCSSRule ({
-  ext,
-  altLang = null,
-  include,
-  exclude,
-  modules = false,
-  useStyle = false
-}) {
+function buildCSSRule({ ext, altLang = null, include, exclude, modules = false, useStyle = false }) {
   const cssOptions = {
     importLoaders: 1,
-    sourceMap: true
+    sourceMap: true,
   }
   if (modules === true) {
     modules = {
       camelCase: 'only',
       localIdentName: '_[name]-[local]-[hash:base64:4]',
-      modules: true
+      modules: true,
     }
   }
   if (modules) {
@@ -270,17 +244,17 @@ function buildCSSRule ({
       {
         loader: 'postcss-loader',
         options: {
-          plugins: (loader) => [require('postcss-cssnext')()],
-          sourceMap: true
-        }
-      }
-    ]
+          plugins: loader => [require('postcss-cssnext')()],
+          sourceMap: true,
+        },
+      },
+    ],
   }
 
   if (altLang) {
     result.use.push({
       loader: `${altLang}-loader`,
-      options: { sourceMap: true }
+      options: { sourceMap: true },
     })
   }
 
@@ -293,13 +267,13 @@ function buildCSSRule ({
 
 const cssPlugins = new Map()
 
-function extractStyling ({ ext, include, exclude, modules, name, altLang }) {
+function extractStyling({ ext, include, exclude, modules, name, version, altLang }) {
   const cssPluginExisted = cssPlugins.has(name)
   if (!cssPluginExisted) {
     cssPlugins.set(
       name,
       // [contenthash:8].
-      new MiniCssExtractPlugin({ filename: '[name].css' })
+      new MiniCssExtractPlugin({ filename: '[name].' + version + '.css' }),
     )
   }
   const cssPlugin = cssPlugins.get(name)
@@ -318,17 +292,14 @@ function extractStyling ({ ext, include, exclude, modules, name, altLang }) {
           //   fallback: 'style-loader',
           //   use
           // })
-          use: [
-            MiniCssExtractPlugin.loader,
-            ...use
-          ]
-        }
-      ]
-    }
+          use: [MiniCssExtractPlugin.loader, ...use],
+        },
+      ],
+    },
   }
 }
 
-function loadStyling ({ ext, include, exclude, modules, altLang }) {
+function loadStyling({ ext, include, exclude, modules, altLang }) {
   return {
     module: {
       rules: [
@@ -338,9 +309,9 @@ function loadStyling ({ ext, include, exclude, modules, altLang }) {
           include,
           exclude,
           modules,
-          useStyle: true
-        })
-      ]
-    }
+          useStyle: true,
+        }),
+      ],
+    },
   }
 }

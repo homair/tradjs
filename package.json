@@ -1,6 +1,6 @@
 {
   "name": "tradjs",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Homair i18n backend in Node.js",
   "main": "boot.js",
   "repository": {
@@ -14,9 +14,9 @@
   },
   "homepage": "https://github.com/homair/tradjs#readme",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "NODE_ENV=production webpack --config webpack.config.js",
+    "client": "NODE_ENV=production webpack --watch --progress --config webpack.config.js",
     "heroku-postbuild": "webpack",
-    "client": "webpack --watch --progress",
     "server": "NODE_ENV=dev PORT=3006 nodemon boot.js",
     "test": "NODE_ENV=test mocha",
     "start": "node boot.js",
