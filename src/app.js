@@ -8,13 +8,14 @@ import express from 'express'
 import { join as joinPaths } from 'path'
 import morgan from 'morgan'
 import config from './config/'
+import cookieSession from 'cookie-session'
 
 import mainController from './controllers/main'
 
 // Crée le conteneur principal de web app (`app`), connecte le serveur HTTP dessus
 // (`server`) et détermine le chemin complet des assets statiques.
 const app = express()
-const publicPath = joinPaths(__dirname, 'public')
+const publicPath = joinPaths(__dirname, '..', 'public')
 
 // Configuration
 // -------------
@@ -22,6 +23,8 @@ const publicPath = joinPaths(__dirname, 'public')
 // Configuration et middleware pour tous les environnements (dev, prod, etc.)
 app.set('port', config.port)
 app.set('view engine', 'pug')
+app.set('views', joinPaths(process.cwd(), '/src/views'))
+
 // if (process.env.NODE_ENV === 'production') {
 //   app.set('view cache', true)
 // }
@@ -50,8 +53,11 @@ if (app.get('env') !== 'test') {
   app.use(morgan(app.get('env') === 'development' ? 'dev' : 'combined'))
 }
 
-// Variables locales partagées par toutes les vues
-app.locals.title = 'Homair vacances'
+// `cookieSession` stocke la session complète en cookie, pas en mémoire serveur,
+// ce qui résiste aux redémarrages (notamment en dev avec `nodemon`) mais pose des
+// contraintes de taille (4Ko max JSONifié + base64-encodé).
+// https://github.com/expressjs/cookie-session#max-cookie-size
+app.use(cookieSession({ name: 'tradjs:session', secret: 'HomR-Vac-TradJS' }))
 
 // Configuration uniquement hors production
 if (app.get('env') !== 'production') {
@@ -64,8 +70,13 @@ if (app.get('env') !== 'production') {
 
 // Rend l’URL et les paramètres de requête accessibles à toutes les vues
 app.use((req, res, next) => {
+  // Variables locales partagées par toutes les vues
+  res.locals.title = 'Homair vacances'
   res.locals.query = req.query
   res.locals.url = req.url
+
+  res.locals.currentDb = req.session.currentDb
+
   next()
 })
 

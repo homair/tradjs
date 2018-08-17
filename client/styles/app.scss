@@ -1,3 +1,15 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+// @import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/input-group';
+@import '~bootstrap/scss/modal';
+@import '~bootstrap/scss/tables';
+
 .wrapper {
   overflow: auto;
 }
@@ -63,9 +75,7 @@ button {
 .table-sortable tbody tr {
   cursor: move;
 }
-.color {
-  background-color: #004d73;
-}
+
 .modal-header {
   background-color: #004d73;
   color: white;
@@ -135,8 +145,8 @@ button {
 .input-group {
   border-collapse: collapse;
 }
-button.show-untranslated {
-}
+// button.show-untranslated {
+// }
 button.switch-on {
   background-color: green;
   color: white;

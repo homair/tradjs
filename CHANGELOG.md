@@ -1,4 +1,6 @@
 # CHANGELOG
+## 2.0.0
+- Moved from hjs-webpack to webpack 4.
 
 ## 1.1.0
 - Fixed issue on delete
