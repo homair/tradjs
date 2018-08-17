@@ -11,6 +11,7 @@ import config from './config/'
 import cookieSession from 'cookie-session'
 
 import mainController from './controllers/main'
+import { DB_DEFAULT } from './lib/mongodb_util'
 
 // Crée le conteneur principal de web app (`app`), connecte le serveur HTTP dessus
 // (`server`) et détermine le chemin complet des assets statiques.
@@ -75,6 +76,7 @@ app.use((req, res, next) => {
   res.locals.query = req.query
   res.locals.url = req.url
 
+  req.session.currentDb = req.session.currentDb || DB_DEFAULT
   res.locals.currentDb = req.session.currentDb
 
   next()
