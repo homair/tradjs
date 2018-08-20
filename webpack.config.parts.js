@@ -1,5 +1,6 @@
 // const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
 
 const webpack = require('webpack')
 
@@ -125,10 +126,9 @@ exports.html = options => {
 // -------------
 
 exports.compressTextFiles = (options = {}) => {
-  const ZopfliPlugin = require('zopfli-webpack-plugin')
   return {
     plugins: [
-      new ZopfliPlugin({
+      new CompressionPlugin({
         test: /\.(?:html|jsx?|css|svg)$/,
         ...options,
       }),
