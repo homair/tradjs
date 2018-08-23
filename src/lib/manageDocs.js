@@ -213,7 +213,7 @@ export function deleteRoute(req, res) {
   let finished = 0
   // if we are on flat_collections
   if (config.flat_collection === true) {
-    for (let lang in config.langs) {
+    for (let lang in config.langs[dbKey]) {
       const where = { language: lang, namespace: config.translationNamespace, key: req.body.key }
 
       logger.info(`deleteRoute: DELETE, where=${JSON.stringify(where)}, key="${req.body.key}"`)
