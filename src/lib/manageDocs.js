@@ -216,7 +216,7 @@ export function deleteRoute(req, res) {
   if (config.flat_collection === true) {
     //for (let lang in config.langs[dbKey]) {
     each(
-      config.langs[dbKey],
+      Object.keys(config.langs[dbKey]),
       function(lang, asyncCb) {
         const where = { language: lang, namespace: config.translationNamespace, key: req.body.key }
 
