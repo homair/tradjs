@@ -53,17 +53,17 @@ const config = {
         label: 'English',
         order: 0,
       },
-      fr: {
-        label: 'French',
-        order: 1,
-      },
+      // fr: {
+      //   label: 'French',
+      //   order: 1,
+      // },
     },
   },
   // order to sort docs
   lang_order: {
     // Mutli-databases:
     default: ['fr', 'en', 'de', 'es', 'it', 'nl', 'pl'],
-    assetregister: ['en_GB', 'fr'],
+    assetregister: ['en_GB' /*, 'fr'*/],
   },
   flat_collection: process.env.FLAT_COLLECTION === 'true', // ### => false | true
   translationNamespace: 'translation',
