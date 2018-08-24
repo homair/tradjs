@@ -43,6 +43,7 @@
   "dependencies": {
     "@babel/core": "^7.0.0-beta.52",
     "@babel/preset-env": "^7.0.0-beta.52",
+    "async": "^2.6.1",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",

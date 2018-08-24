@@ -3,6 +3,8 @@ import MongoDB from 'mongodb'
 import _ from 'lodash'
 import config from '../config/'
 import logger from './customLogger'
+import { each } from 'async'
+
 // -----------------------------------------------------------------------------------------------------------------------
 // Fonction qui permet de parcourir les documents de la base et de déplier tous les objets pour tout avoir au même niveau
 // -----------------------------------------------------------------------------------------------------------------------
@@ -210,43 +212,58 @@ export function updateRoute(req, res) {
 export function deleteRoute(req, res) {
   const dbKey = req.session.currentDb
 
-  let finished = 0
   // if we are on flat_collections
   if (config.flat_collection === true) {
-    for (let lang in config.langs[dbKey]) {
-      const where = { language: lang, namespace: config.translationNamespace, key: req.body.key }
+    //for (let lang in config.langs[dbKey]) {
+    each(
+      config.langs[dbKey],
+      function(lang, asyncCb) {
+        const where = { language: lang, namespace: config.translationNamespace, key: req.body.key }
 
-      logger.info(`deleteRoute: DELETE, where=${JSON.stringify(where)}, key="${req.body.key}"`)
+        logger.info(`deleteRoute: DELETE, where=${JSON.stringify(where)}, key="${req.body.key}"`)
 
-      getDb(dbKey)
-        .collection(config.db.root_collection)
-        .deleteOne(where, (err, result) => {
-          if (err) {
-            logger.error(`deleteRoute: (flat format) err="${err}"`, { err })
-            return res.status(500).send(err)
-          }
-          finished++
-          logger.debug('deleteRoute: where = ' + JSON.stringify(where) + ', deletedCount=' + result.deletedCount)
+        getDb(dbKey)
+          .collection(config.db.root_collection)
+          .deleteOne(where, (err, result) => {
+            if (err) {
+              return asyncCb(err)
+            }
+            logger.debug('deleteRoute: where = ' + JSON.stringify(where) + ', deletedCount=' + result.deletedCount)
 
-          if (finished === Object.keys(config.langs).length) {
-            res.send('ok')
-          }
-        })
-    }
+            asyncCb()
+          })
+      },
+      err => {
+        if (err) {
+          logger.error(`deleteRoute: (flat format) err="${err}"`, { err })
+          return res.status(500).send(err)
+        }
+        res.send('ok')
+      },
+    )
   } else {
-    for (let lang in config.langs) {
-      getDb(dbKey)
-        .collection(config.db.root_collection)
-        .updateOne({ language: lang }, { $unset: { [req.body.key]: '' } }, (err, result) => {
-          if (err) {
-            logger.error(`deleteRoute: (regular format) err="${err}"`, { err })
-            return res.status(500).send(err)
-          }
-          finished++
-          if (finished === Object.keys(config.langs).length) {
-            res.send('ok')
-          }
-        })
-    }
+    each(
+      config.langs[dbKey],
+      function(lang, asyncCb) {
+        getDb(dbKey)
+          .collection(config.db.root_collection)
+          .deleteOne({ language: lang }, { $unset: { [req.body.key]: '' } }, (err, result) => {
+            if (err) {
+              asyncCb(err)
+            }
+
+            logger.debug('deleteRoute: (Object format) where = ' + JSON.stringify({ language: lang }) + ', deletedCount=' + result.deletedCount)
+
+            asyncCb()
+          })
+      },
+      err => {
+        if (err) {
+          logger.error(`deleteRoute: (object format) err="${err}"`, { err })
+          return res.status(500).send(err)
+        }
+        res.send('ok')
+      },
+    )
   }
 }
