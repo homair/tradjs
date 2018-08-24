@@ -24,7 +24,7 @@ $(document).ready(function() {
     editedId = $tr.attr('id')
 
     $('#myModal').modal('show')
-    $('.modal-title').html('Clé : ' + $tr.data('key'))
+    $('.modal-title').html('Key : ' + $tr.data('key'))
     $tr.find('textarea').each(function() {
       const lang = $(this).data('lang')
       $('.modal-body .form-group[data-lang="' + lang + '"] .input-group').append($(this))
