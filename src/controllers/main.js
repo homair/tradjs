@@ -19,7 +19,9 @@ if (['dev', 'test'].indexOf(process.env.NODE_ENV) === -1) {
     if (config.authorizedIps.indexOf(req.ip) === -1) {
       const auth = { login: 'homair', password: 'site2016' } // change this
       const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
-      const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':')
+      const [login, password] = Buffer.from(b64auth, 'base64')
+        .toString()
+        .split(':')
       // Verify login and password are set and correct
       if (!login || !password || login !== auth.login || password !== auth.password) {
         res.set('WWW-Authenticate', 'Basic realm="Homair Vacances"')
@@ -76,7 +78,8 @@ router.get('/doc_by_language/:lang', (req, res) => {
 router.get('/switch-db', (req, res) => {
   if ([DB_AR, DB_DEFAULT].indexOf(req.query.db) !== -1) {
     req.session.currentDb = req.query.db
-    return res.redirect('/')
+    const suffix = req.query.v ? '?v=flat' : ''
+    return res.redirect('/' + suffix)
   }
   return res.status(400).send('Wrong dbname')
 })

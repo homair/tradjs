@@ -31,7 +31,7 @@ $(document).ready(function() {
     })
   })
   $('#myModal').on('shown.bs.modal', function() {
-    $('textarea[data-lang="fr"]', $(this)).focus()
+    $('textarea', $(this))[0].select()
   })
 
   $('#myModal').on('hidden.bs.modal', function() {
@@ -157,7 +157,11 @@ $(document).ready(function() {
   // ----------------------------------------------------------------------------
   $('header .jqDBSelect').on('change', function(e) {
     e.preventDefault()
-    window.location.href = window.location.origin + '/switch-db?db=' + e.target.options[e.target.selectedIndex].value
+    window.location.href =
+      window.location.origin +
+      '/switch-db?db=' +
+      e.target.options[e.target.selectedIndex].value +
+      (location.search ? location.search.replace('?', '&') : '')
   })
 
   // -----------------------------------------------------------------------------
@@ -228,7 +232,7 @@ function resetSearch() {
 function removeLine(key) {
   $('tr.line[data-key="' + key + '"]').remove()
 }
-
+/*
 function regroupLabels() {
   let racinessniveau = ''
   let racine = ''
@@ -266,7 +270,7 @@ function regroupLabels() {
     }
   })
 
-  /* ----- Pliage et dépliage des lignes au moment du clic pour le premier niveau ------- */
+  // ----- Pliage et dépliage des lignes au moment du clic pour le premier niveau -------
   $('th.pliage').on('click', function() {
     const $this = $(this)
     const dataRoot = $this.data('root')
@@ -296,7 +300,7 @@ function regroupLabels() {
     }
   })
 
-  /* ----- Pliage et dépliage des lignes au moment du clic pour le deuxième niveau ------- */
+  // ----- Pliage et dépliage des lignes au moment du clic pour le deuxième niveau -------
   $('th.pliage_ss_niveau').on('click', function() {
     const $this = $(this)
     const dataRoot = $this.data('root')
@@ -322,6 +326,7 @@ function regroupLabels() {
   // $('th.pliage_ss_niveau').hide()
   $('tr.line').hide()
 }
+*/
 
 function saveToStorage(txt) {
   if (!window.localStorage) return
