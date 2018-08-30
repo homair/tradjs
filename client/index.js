@@ -124,6 +124,8 @@ $(document).ready(function() {
 
   // RESET search.
   $('#reset-search').on('click', function() {
+    console.log('clearing search')
+
     $('#searching').val('')
     resetSearch()
   })
@@ -171,7 +173,7 @@ $(document).ready(function() {
 })
 
 // ==============================================================================================
-function init() {
+function init(doReset) {
   if ($('#tab_logic').data('regroup') === 1) {
     //  regroupLabels()
   } else {
@@ -194,11 +196,13 @@ function init() {
     })
   }
 
-  var oldVal = restoreFromStorage()
-  if (oldVal) {
-    var _inputSearch = $('input.search')
-    _inputSearch.val(oldVal)
-    recherche(oldVal)
+  if (!doReset) {
+    var oldVal = restoreFromStorage()
+    if (oldVal) {
+      var _inputSearch = $('input.search')
+      _inputSearch.val(oldVal)
+      recherche(oldVal)
+    }
   }
 }
 
@@ -222,11 +226,11 @@ function resetGrouppedSearch() {
   //   $('tbody tr[class="affichage"]').show()
   //   $('tbody tr[class="affichage_ss_niveau"]').show()
   // }
-  init()
+  init(true)
 }
 function resetSearch() {
-  saveToStorage('')
-  resetGrouppedSearch('')
+  saveToStorage(false)
+  resetGrouppedSearch()
 }
 
 function removeLine(key) {
