@@ -34,7 +34,7 @@ const coreConfig = merge(
   parts.generateSourceMaps(),
   parts.babelize({
     include: PATHS.source,
-    options: { plugins: ['syntax-dynamic-import'] },
+    options: PACKAGE.babel,
   }),
   parts.ignoreMomentLocales(),
   // parts.loadImages(),

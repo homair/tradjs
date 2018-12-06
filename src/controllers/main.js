@@ -79,7 +79,7 @@ router.get('/switch-db', (req, res) => {
   if ([DB_AR, DB_DEFAULT].indexOf(req.query.db) !== -1) {
     req.session.currentDb = req.query.db
     const suffix = req.query.v ? '?v=flat' : ''
-    return res.redirect('/' + suffix)
+    return res.redirect(`/${suffix}`)
   }
   return res.status(400).send('Wrong dbname')
 })

@@ -15,12 +15,12 @@ import { each } from 'async'
 export function parseSimpleObject(obj, key, parentKey, collector, lang) {
   // logger.debug('key, parentKey, collector', key, parentKey, collector)
   if (typeof obj[key] === 'string') {
-    const newKey = (parentKey ? parentKey + '.' : '') + key
+    const newKey = (parentKey ? `${parentKey}.` : '') + key
     if (!collector[newKey]) collector[newKey] = {}
     collector[newKey][lang] = obj[key]
   } else if (typeof obj[key] === 'object') {
     Object.keys(obj[key]).forEach(function(subkey) {
-      parseSimpleObject(obj[key], subkey, (parentKey ? parentKey + '.' : '') + key, collector, lang)
+      parseSimpleObject(obj[key], subkey, (parentKey ? `${parentKey}.` : '') + key, collector, lang)
     })
   }
 }
@@ -90,7 +90,7 @@ export function getRegularOrderedDocs(dbKey, langs, callback) {
 }
 
 export function getFlatOrderedDocs(dbKey, langs, callback) {
-  logger.debug('getFlatOrderedDocs, dbKey=' + dbKey)
+  logger.debug(`getFlatOrderedDocs, dbKey=${dbKey}`)
 
   const hrstart = process.hrtime()
 
@@ -228,7 +228,7 @@ export function deleteRoute(req, res) {
             if (err) {
               return asyncCb(err)
             }
-            logger.debug('deleteRoute: where = ' + JSON.stringify(where) + ', deletedCount=' + result.deletedCount)
+            logger.debug(`deleteRoute: where = ${JSON.stringify(where)}, deletedCount=${result.deletedCount}`)
 
             asyncCb()
           })
@@ -252,7 +252,7 @@ export function deleteRoute(req, res) {
               asyncCb(err)
             }
 
-            logger.debug('deleteRoute: (Object format) where = ' + JSON.stringify({ language: lang }) + ', deletedCount=' + result.deletedCount)
+            logger.debug(`deleteRoute: (Object format) where = ${JSON.stringify({ language: lang })}, deletedCount=${result.deletedCount}`)
 
             asyncCb()
           })

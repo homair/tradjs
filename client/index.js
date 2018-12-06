@@ -24,10 +24,10 @@ $(document).ready(function() {
     editedId = $tr.attr('id')
 
     $('#myModal').modal('show')
-    $('.modal-title').html('Key : ' + $tr.data('key'))
+    $('.modal-title').html(`Key : ${$tr.data('key')}`)
     $tr.find('textarea').each(function() {
       const lang = $(this).data('lang')
-      $('.modal-body .form-group[data-lang="' + lang + '"] .input-group').append($(this))
+      $(`.modal-body .form-group[data-lang="${lang}"] .input-group`).append($(this))
     })
   })
   $('#myModal').on('shown.bs.modal', function() {
@@ -39,7 +39,7 @@ $(document).ready(function() {
       .find('textarea')
       .each(function() {
         const lang = $(this).data('lang')
-        $('tr[id="' + editedId + '"] td[data-lang="' + lang + '"]').append($(this))
+        $(`tr[id="${editedId}"] td[data-lang="${lang}"]`).append($(this))
       })
   })
 
@@ -56,7 +56,7 @@ $(document).ready(function() {
       if (valFocus !== el.val()) {
         $.ajax({
           type: 'POST',
-          url: window.location.origin + '/update',
+          url: `${window.location.origin}/update`,
           data: { _id: $(this).data('id'), key: $(this).data('key'), value: $(this).val(), language: $(this).data('lang') },
           timeout: 3000,
           success: function(data) {
@@ -69,7 +69,7 @@ $(document).ready(function() {
             }
           },
           error: function(err) {
-            bootbox.alert('Error while updating data : ' + JSON.stringify(err))
+            bootbox.alert(`Error while updating data : ${JSON.stringify(err)}`)
           },
         })
       }
@@ -84,7 +84,7 @@ $(document).ready(function() {
       if (result === true) {
         $.ajax({
           type: 'DELETE',
-          url: window.location.origin + '/delete',
+          url: `${window.location.origin}/delete`,
           data: { key: key },
           timeout: 3000,
           success: function(data) {
@@ -93,7 +93,7 @@ $(document).ready(function() {
             }
           },
           error: function(err) {
-            bootbox.alert('Error while deleting data : ' + err)
+            bootbox.alert(`Error while deleting data : ${err}`)
           },
         })
       }
@@ -159,11 +159,9 @@ $(document).ready(function() {
   // ----------------------------------------------------------------------------
   $('header .jqDBSelect').on('change', function(e) {
     e.preventDefault()
-    window.location.href =
-      window.location.origin +
-      '/switch-db?db=' +
-      e.target.options[e.target.selectedIndex].value +
-      (location.search ? location.search.replace('?', '&') : '')
+    window.location.href = `${window.location.origin}/switch-db?db=${e.target.options[e.target.selectedIndex].value}${
+      location.search ? location.search.replace('?', '&') : ''
+    }`
   })
 
   // -----------------------------------------------------------------------------
@@ -209,7 +207,7 @@ function init(doReset) {
 function recherche(search) {
   search = search.replace('*', '.*')
   $('tr').hide()
-  $('tr[data-key*="' + search + '"]').show()
+  $(`tr[data-key*="${search}"]`).show()
   $('textarea').removeClass('found')
   // $('tbody textarea').filter().addClass('found').closest('tr').show()
   var re = new RegExp(search, 'ig')
@@ -234,7 +232,7 @@ function resetSearch() {
 }
 
 function removeLine(key) {
-  $('tr.line[data-key="' + key + '"]').remove()
+  $(`tr.line[data-key="${key}"]`).remove()
 }
 /*
 function regroupLabels() {

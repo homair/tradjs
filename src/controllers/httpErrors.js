@@ -3,21 +3,21 @@ import 'colors'
 
 const router = new Router()
 
-router.get('/404', function (req, res, next) {
+router.get('/404', function(req, res, next) {
   // trigger a 404 since no other middleware
   // will match /404 after this one, and we're not
   // responding here
   next()
 })
 
-router.get('/403', function (req, res, next) {
+router.get('/403', function(req, res, next) {
   // trigger a 403 error
   var err = new Error('not allowed!')
   err.status = 403
   next(err)
 })
 
-router.get('/500', function (req, res, next) {
+router.get('/500', function(req, res, next) {
   // trigger a generic (500) error
   next(new Error('keyboard cat!'))
 })
@@ -32,7 +32,7 @@ router.get('/500', function (req, res, next) {
 // $ curl http://localhost:3000/notfound -H "Accept: application/json"
 // $ curl http://localhost:3000/notfound -H "Accept: text/plain"
 
-router.use(function (req, res, next) {
+router.use(function(req, res, next) {
   res.status(404)
   // respond with html page
   res.render('errors/404', { url: req.url })
