@@ -4,8 +4,8 @@ import httpErrorController from './httpErrors'
 import config from '../config/'
 import 'colors'
 import logger from '../lib/customLogger'
-import { getOrderedDocs, updateRoute, deleteRoute } from '../lib/manageDocs'
-import { DB_AR, DB_DEFAULT } from '../lib/mongodb_util'
+import { getOrderedDocs, updateRoute, deleteRoute, duplicateToPalmierRoute } from '../lib/manageDocs'
+import { DB_AR, DB_PO, DB_DEFAULT } from '../lib/mongodb_util'
 
 const router = new Router()
 
@@ -62,6 +62,20 @@ router.delete('/delete', (req, res) => {
   }
 })
 
+// -------------------------------------------------
+// Duplicate key on Palmier Ocean
+// -------------------------------------------------
+router.post('/duplicate', (req, res) => {
+  logger.info('endpoint=duplicate', req.body)
+  if (!req.body.key) {
+    logger.error('endpoint=duplicate, Error : missing parameters to duplicate key')
+    res.status(500).json({ msg: 'Des paramètres sont manquants' })
+  } else {
+    duplicateToPalmierRoute(req, res)
+    logger.info(`endpoint=duplicate, translation key=${req.body.key} duplicated on Palmier-Ocean !`)
+  }
+})
+
 // Recup d'un document
 router.get('/doc_by_language/:lang', (req, res) => {
   const myLanguageConfig = { [req.params.lang]: config.langs[req.session.currentDb][req.params.lang] }
@@ -76,7 +90,7 @@ router.get('/doc_by_language/:lang', (req, res) => {
 })
 
 router.get('/switch-db', (req, res) => {
-  if ([DB_AR, DB_DEFAULT].indexOf(req.query.db) !== -1) {
+  if ([DB_AR, DB_PO, DB_DEFAULT].indexOf(req.query.db) !== -1) {
     req.session.currentDb = req.query.db
     const suffix = req.query.v ? '?v=flat' : ''
     return res.redirect(`/${suffix}`)

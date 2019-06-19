@@ -4,6 +4,7 @@ import config from '../config'
 let _dbByKey = {}
 
 export const DB_DEFAULT = 'default'
+export const DB_PO = 'palmierocean'
 export const DB_AR = 'assetregister'
 
 export function connect(dbKey, callback) {

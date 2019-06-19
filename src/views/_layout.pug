@@ -6,6 +6,11 @@ html
     if (process.env.NODE_ENV === 'production')
       link(rel='stylesheet', href='/tradjs.2.0.0.css')
     link(rel='stylesheet', href='/font-awesome.min.css')
+    if (process.env.NODE_ENV === 'production')
+      script(src='/tradjs.2.0.0.js', async="defer")
+    else
+      script(src='/tradjs.js', async="defer")
+
   body
     header
       .row.stylehead
@@ -27,6 +32,7 @@ html
             .form-group
               select.form-control.jqDBSelect
                 option(value='default', selected=(currentDb === 'default')) www.homair.com
+                option(value='palmierocean', selected=(currentDb === 'palmierocean')) www.palmier-ocean.com
                 option(value='assetregister', selected=(currentDb === 'assetregister')) Asset register
 
     table.table-bordered.table-dark
@@ -39,8 +45,3 @@ html
 
     script.
       window.defaultSearch = '#{query.search}'
-    if (process.env.NODE_ENV === 'production')
-      script(src='/tradjs.2.0.0.js')
-    else
-      script(src='/tradjs.js')
-

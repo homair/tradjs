@@ -15,12 +15,11 @@
   "homepage": "https://github.com/homair/tradjs#readme",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.config.js",
-    "client": "webpack --watch --progress --config webpack.config.js",
+    "dev": "webpack --watch --progress --config webpack.config.js",
     "heroku-postbuild": "webpack",
-    "server": "NODE_ENV=dev PORT=3006 nodemon boot.js",
     "test": "NODE_ENV=test mocha",
     "start": "node boot.js",
-    "dev": "FLAT_COLLECTION=true npm run server"
+    "server": "NODE_ENV=dev PORT=3006 nodemon boot.js"
   },
   "babel": {
     "presets": [

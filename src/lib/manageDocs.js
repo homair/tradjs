@@ -1,4 +1,4 @@
-import { getDb } from '../lib/mongodb_util'
+import { getDb, DB_PO } from '../lib/mongodb_util'
 import MongoDB from 'mongodb'
 import _ from 'lodash'
 import config from '../config/'
@@ -45,7 +45,7 @@ export function getRegularOrderedDocs(dbKey, langs, callback) {
   /* ------ Recupère l'ensemble des documents de la collection "i18next" en fonction de la langue défini dans la config. -------- */
   getDb(dbKey)
     .collection(config.db.root_collection)
-    .find({ language: { $in: [...Object.keys(langs)] } })
+    .find({ language: { $in: [...Object.keys(langs)] }, namespace: config.db[dbKey].translationNamespace })
     .toArray((err, docs) => {
       if (err) {
         callback(err, null)
@@ -98,7 +98,7 @@ export function getFlatOrderedDocs(dbKey, langs, callback) {
   getDb(dbKey)
     .collection(config.db.root_collection)
     .aggregate([
-      { $match: { language: { $in: [...Object.keys(langs)] } } },
+      { $match: { language: { $in: [...Object.keys(langs)] }, namespace: config.db[dbKey].translationNamespace } },
       { $sort: { key: 1, language: 1 } },
       {
         $group: {
@@ -218,7 +218,7 @@ export function deleteRoute(req, res) {
     each(
       Object.keys(config.langs[dbKey]),
       function(lang, asyncCb) {
-        const where = { language: lang, namespace: config.translationNamespace, key: req.body.key }
+        const where = { language: lang, namespace: config.db[dbKey].translationNamespace, key: req.body.key }
 
         logger.info(`deleteRoute: DELETE, where=${JSON.stringify(where)}, key="${req.body.key}"`)
 
@@ -265,5 +265,38 @@ export function deleteRoute(req, res) {
         res.send('ok')
       },
     )
+  }
+}
+
+// EXPLICIT function that duplicate a key to PalmierOcean FR
+// Volontary simple to handle the main case for now (HV->PO, FR only)
+export function duplicateToPalmierRoute(req, res) {
+  const dbKey = req.session.currentDb
+  // if we are on flat_collections
+  if (config.flat_collection === true) {
+    // get FR value (as it's only in FR for now)
+    let where = { language: 'fr', namespace: config.db[dbKey].translationNamespace, key: req.body.key }
+    getDb(dbKey)
+      .collection(config.db.root_collection)
+      .findOne(where, (err, result) => {
+        if (err || !result) {
+          logger.error(`duplicateToPalmierRoute: ${err ? `err=${err}` : 'key not found / result is empty'}`, { err })
+          return res.status(500).send(err)
+        }
+
+        // insert key and value insite Palmier Ocean namespace
+        where.namespace = config.db[DB_PO].translationNamespace
+        getDb(DB_PO)
+          .collection(config.db.root_collection)
+          .updateOne(where, { $set: { data: String(result.data) } }, { upsert: true }, (err, result) => {
+            if (err) {
+              logger.error(`duplicateToPalmierRoute: err="${err}"`, { err })
+              return res.status(500).send(err)
+            }
+            res.send('ok')
+          })
+      })
+  } else {
+    res.status(500).send('i18n "object" collection not handled')
   }
 }

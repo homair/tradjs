@@ -14,7 +14,9 @@ block content
                   .input-group-text(style="width: 100px;")= lang.label.toUpperCase()
         .modal-footer
           button.btn.btn-primary(data-dismiss="modal")="Save and close"
-
+          if currentDb === 'default'
+            button.btn.btn-secondary.overridePO="Override in Palmier-Ocean"
+            .info.collapse
   center
     .wrapper
       table#tab_logic.table.table-bordered(data-regroup=(display === 'flat' ? 0 : 1))

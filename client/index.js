@@ -29,6 +29,8 @@ $(document).ready(function() {
       const lang = $(this).data('lang')
       $(`.modal-body .form-group[data-lang="${lang}"] .input-group`).append($(this))
     })
+    // store the key on action buttons
+    $('button.overridePO').attr('data-key', $tr.data('key'))
   })
   $('#myModal').on('shown.bs.modal', function() {
     $('textarea', $(this))[0].select()
@@ -94,6 +96,42 @@ $(document).ready(function() {
           },
           error: function(err) {
             bootbox.alert(`Error while deleting data : ${err}`)
+          },
+        })
+      }
+    })
+  })
+
+  // -----------------------------------------------------------------------------
+  // Override a key from default namespace to PalmierOcean
+  // -----------------------------------------------------------------------------
+  $('button.overridePO').on('click', function(e) {
+    const key = $(this).data('key')
+    bootbox.confirm(`Are you sure you want to override this key in Palmier-Ocean ? (if this key already exist, it'll be overwritten)`, function(result) {
+      if (result === true) {
+        $.ajax({
+          type: 'POST',
+          url: `${window.location.origin}/duplicate`,
+          data: { key: key },
+          timeout: 3000,
+          success: function(data) {
+            if (data === 'ok') {
+              $('.modal-footer .info')
+                .html(`Key <strong>${key}</strong> successfully duplicated in Palmier-Ocean.`)
+                .show()
+              $('button.overridePO')
+                .removeClass('overridePO')
+                .text('See in Palmier-Ocean')
+                .off('click')
+                .on('click', function() {
+                  window.location.href = `${window.location.origin}/switch-db?db=palmierocean${
+                    location.search ? location.search.replace('?', '&') : ''
+                  }`
+                })
+            }
+          },
+          error: function(err) {
+            bootbox.alert(`Error while duplicating data : ${err}`)
           },
         })
       }

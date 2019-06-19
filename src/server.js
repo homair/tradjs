@@ -8,7 +8,7 @@ import 'colors'
 
 import app from './app'
 
-import { DB_DEFAULT, DB_AR, connect as dbConnect } from './lib/mongodb_util'
+import { DB_DEFAULT, DB_AR, DB_PO, connect as dbConnect } from './lib/mongodb_util'
 
 // Crée le conteneur principal de web app (`app`), connecte le serveur HTTP dessus
 // (`server`) et détermine le chemin complet des assets statiques.
@@ -30,10 +30,18 @@ dbConnect(DB_DEFAULT, err => {
     }
     logger.info('✔ Connection established to '.green + DB_AR.cyan + ' database'.green)
 
-    // Lancement effectif du serveur en écoutant sur le bon port pour des
-    // connexions HTTP entrantes.  Le port par défaut est 3000 (voir plus haut).
-    server.listen(app.get('port'), () => {
-      logger.info(`✔ Server listening on ${('http://localhost:' + app.get('port')).yellow}`)
+    dbConnect(DB_PO, err => {
+      if (err) {
+        logger.error(err)
+        process.exit(-1)
+      }
+      logger.info('✔ Connection established to '.green + DB_PO.cyan + ' database'.green)
+
+      // Lancement effectif du serveur en écoutant sur le bon port pour des
+      // connexions HTTP entrantes.  Le port par défaut est 3000 (voir plus haut).
+      server.listen(app.get('port'), () => {
+        logger.info(`✔ Server listening on ${('http://localhost:' + app.get('port')).yellow}`)
+      })
     })
   })
 })
