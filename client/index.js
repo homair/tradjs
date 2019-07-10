@@ -107,6 +107,7 @@ $(document).ready(function() {
   // -----------------------------------------------------------------------------
   $('button.overridePO').on('click', function(e) {
     const key = $(this).data('key')
+    const footerHtml = $('.modal-footer').html() // save modal footer state
     bootbox.confirm(`Are you sure you want to override this key in Palmier-Ocean ? (if this key already exist, it'll be overwritten)`, function(result) {
       if (result === true) {
         $.ajax({
@@ -116,9 +117,17 @@ $(document).ready(function() {
           timeout: 3000,
           success: function(data) {
             if (data === 'ok') {
+              // bind restore footer state on "save & close" button
+              $('.modal-footer button.btn-primary').on('click', function() {
+                setTimeout(function() {
+                  $('.modal-footer').html(footerHtml)
+                }, 0) // will be played right after callback stack
+              })
+              // information
               $('.modal-footer .info')
                 .html(`Key <strong>${key}</strong> successfully duplicated in Palmier-Ocean.`)
                 .show()
+              // easy access to PO view
               $('button.overridePO')
                 .removeClass('overridePO')
                 .text('See in Palmier-Ocean')
@@ -131,7 +140,7 @@ $(document).ready(function() {
             }
           },
           error: function(err) {
-            bootbox.alert(`Error while duplicating data : ${err}`)
+            bootbox.alert(`Error while duplicating data : ${err.statusText} [status=${err.status}]`)
           },
         })
       }
