@@ -176,7 +176,7 @@ export function updateRoute(req, res) {
 
   // if we are on flat_collections
   if (config.flat_collection === true) {
-    let where = { language: req.body.language, namespace: config.translationNamespace, key: req.body.key }
+    let where = { language: req.body.language, namespace: config.db[dbKey].translationNamespace, key: req.body.key }
     if (req.body._id) {
       where = { _id: new MongoDB.ObjectID(req.body._id) }
       logger.info(`updateRoute: UPDATE, where=${JSON.stringify(where)}, key="${req.body.key}", value="${JSON.stringify(req.body.value)}"`)
