@@ -49,8 +49,8 @@ const homairCustomDataFormatter = format(info => {
       info.ip = info.req.ip
     }
 
-    let reqId = info.req.headers['x-request-id'] || (info.req.body && info.req.body.request_id) || info.req.query.request_id
-    info.requestId = reqId
+    let reqId = (info.req.body && info.req.body.request_id) || info.req.query.request_id || info.req.headers['x-request-id']
+    info.request_id = reqId
 
     delete info.req
   }
