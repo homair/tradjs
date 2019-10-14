@@ -90,15 +90,24 @@ export function getRegularOrderedDocs(dbKey, langs, callback) {
 }
 
 export function getFlatOrderedDocs(dbKey, langs, callback) {
-  logger.debug(`getFlatOrderedDocs, dbKey=${dbKey}`)
-
   const hrstart = process.hrtime()
 
-  /* ------ Recupère l'ensemble des documents de la collection "i18next" en fonction de la langue défini dans la config. -------- */
+  const filters = {
+    language: { $in: [...Object.keys(langs)] },
+    // On recup le namespace courant et PO (pour afficher des flags 'overriden')
+    namespace: { $in: [config.db[dbKey].translationNamespace, config.db[DB_PO].translationNamespace] },
+    //DEBUG: key: 'data.common.labels.logo.link_href_logo_secondaire',
+  }
+
+  logger.debug(`getFlatOrderedDocs, dbKey=${dbKey}, filters=${JSON.stringify(filters)}`)
+
+  // ------ Recupère l'ensemble des documents de la collection "i18next" en fonction de la langue défini dans la config. --------
   getDb(dbKey)
     .collection(config.db.root_collection)
     .aggregate([
-      { $match: { language: { $in: [...Object.keys(langs)] }, namespace: config.db[dbKey].translationNamespace } },
+      {
+        $match: filters,
+      },
       { $sort: { key: 1, language: 1 } },
       {
         $group: {
@@ -107,6 +116,7 @@ export function getFlatOrderedDocs(dbKey, langs, callback) {
             $push: {
               lang: '$language',
               value: '$data',
+              namespace: '$namespace',
               _id: '$$ROOT._id',
             },
           },
@@ -118,7 +128,7 @@ export function getFlatOrderedDocs(dbKey, langs, callback) {
       if (err) {
         callback(err, null)
       }
-
+      // console.log(require('util').inspect(docs, { depth: 6 }))
       // recombine docs
       // { key: 'page.park.aquapark.rightBlock.title',
       // fr: 'Informations pratiques',
@@ -133,18 +143,48 @@ export function getFlatOrderedDocs(dbKey, langs, callback) {
       if (Array.isArray(docs)) {
         docs.forEach(el => {
           // store key
-          curr = { key: el.key }
+          curr = { key: el.key, translations: {} }
+
+          const isOverridden = {}
+
+          // console.log('VALUES=', el.values)
+
+          const newValues = []
+          el.values.forEach(v => {
+            // On regarde dans le namespace PO si overriden (uniquement si Homair).
+            if (dbKey == 'default' && v.namespace == config.db[DB_PO].translationNamespace) {
+              isOverridden[v.lang] = true
+            } else {
+              // on stocke le namespace courant uniquement
+              newValues.push(v)
+            }
+          })
+
           // transform values to object indexed on lang
-          const oValues = _.keyBy(el.values, 'lang')
+          const oValues = _.keyBy(newValues, 'lang')
+
+          //console.log('oValues=', oValues)
+
           // store values in order
           config.lang_order[dbKey].forEach(lang => {
             if (oValues[lang] && oValues[lang].value) {
-              curr[lang] = oValues[lang]
+              curr.translations[lang] = {
+                ...oValues[lang],
+                isOverridden: isOverridden[lang],
+              }
+
+              // Si au moins une langue overriden, marquer la ligne.
+              if (isOverridden[lang]) {
+                curr.isOverridden = true
+              }
             }
           })
+
           objReturn.push(curr)
         })
       }
+
+      // console.log('------------ objReturn = ', require('util').inspect(objReturn, { depth: 6 }))
 
       const results = _.sortBy(objReturn, 'key')
 

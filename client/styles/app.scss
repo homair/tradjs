@@ -50,6 +50,9 @@ table {
     textarea {
       resize: none;
     }
+    tr.overridden {
+      color: #0171ff;
+    }
   }
 }
 input {
@@ -155,8 +158,14 @@ button.switch-on {
 tr.highlight {
   background-color: #ffddae !important;
 }
-textarea.highlight {
-  border: 1px dotted orange !important;
+textarea {
+  &.highlight {
+    border: 1px dotted orange !important;
+  }
+  &.overridden,
+  &.overridden:focus {
+    color: #0171ff;
+  }
 }
 
 .info {

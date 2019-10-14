@@ -30,13 +30,16 @@ block content
 
         tbody
           each valTab in results
-            tr.line(id='row_' + valTab.key, data-key= valTab.key)
+            - const isAtLeastOneOverridden = valTab.isOverridden
+            tr.line(id='row_' + valTab.key, data-key= valTab.key, class=(isAtLeastOneOverridden ? 'overridden':''))
               th.modTrig
-                span.key(id= valTab._id, data-key=valTab.key)= valTab.key.substr(5)
+                span.key(id= valTab._id, data-key=valTab.key, title=(isAtLeastOneOverridden ? 'Surdéfini pour PO' : ''))= valTab.key.substr(5)
 
               each lang, keyLang in listeLang
-                td.modTrig(data-lang=keyLang)
-                  textarea.form-control(data-id= valTab[keyLang] ? valTab[keyLang]._id : '', data-key= valTab.key, data-lang=keyLang, rows=1)= valTab[keyLang] ? valTab[keyLang].value : ''
+                - const translation = valTab.translations[keyLang]
+                - const isOverridden = translation ? translation.isOverridden : false
+                td.modTrig(data-lang=keyLang, class=(isOverridden ? 'overridden':''))
+                  textarea.form-control(data-id= translation ? translation._id : '', data-key= valTab.key, data-lang=keyLang, rows=1, class=(isOverridden ? 'overridden':''))= translation ? translation.value : ''
 
               td
                 button.closed(id='btn_' + valTab.key, type='button', value='Supprimer', data-inputkey= valTab.key, data-dismiss='alert', data-confirm='confirmation')

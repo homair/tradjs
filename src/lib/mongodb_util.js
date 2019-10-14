@@ -8,18 +8,14 @@ export const DB_PO = 'palmierocean'
 export const DB_AR = 'assetregister'
 
 export function connect(dbKey, callback) {
-  MongoClient.connect(
-    config.db[dbKey].uri,
-    { useNewUrlParser: true },
-    (err, client) => {
-      if (err) {
-        return callback(err)
-      }
+  MongoClient.connect(config.db[dbKey].uri, { useNewUrlParser: true }, (err, client) => {
+    if (err) {
+      return callback(err)
+    }
 
-      _dbByKey[dbKey] = client.db(config.db[dbKey].dbname)
-      return callback(null, _dbByKey[dbKey])
-    },
-  )
+    _dbByKey[dbKey] = client.db(config.db[dbKey].dbname)
+    return callback(null, _dbByKey[dbKey])
+  })
 }
 
 // Mutli-databases:
