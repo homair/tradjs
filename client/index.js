@@ -55,26 +55,26 @@ $(document).ready(function() {
     })
     .on('blur', function() {
       const el = $(this)
-      if (valFocus !== el.val()) {
-        $.ajax({
-          type: 'POST',
-          url: `${window.location.origin}/update`,
-          data: { _id: $(this).data('id'), key: $(this).data('key'), value: $(this).val(), language: $(this).data('lang') },
-          timeout: 3000,
-          success: function(data) {
-            if (data === 'ok') {
-              el.addClass('class')
-              window.setTimeout(function() {
-                el.addClass('class1')
-              }, 10)
-              el.removeClass('class1')
-            }
-          },
-          error: function(err) {
-            bootbox.alert(`Error while updating data : ${JSON.stringify(err)}`)
-          },
-        })
-      }
+      //if (valFocus !== el.val()) {
+      $.ajax({
+        type: 'POST',
+        url: `${window.location.origin}/update`,
+        data: { _id: $(this).data('id'), key: $(this).data('key'), value: $(this).val(), language: $(this).data('lang') },
+        timeout: 3000,
+        success: function(data) {
+          if (data === 'ok') {
+            el.addClass('class')
+            window.setTimeout(function() {
+              el.addClass('class1')
+            }, 10)
+            el.removeClass('class1')
+          }
+        },
+        error: function(err) {
+          bootbox.alert(`Error while updating data : ${JSON.stringify(err)}`)
+        },
+      })
+      //
     })
 
   // ----------------------------------------------------------------------------------
@@ -108,7 +108,9 @@ $(document).ready(function() {
   $('button.overridePO').on('click', function(e) {
     const key = $(this).data('key')
     const footerHtml = $('.modal-footer').html() // save modal footer state
-    bootbox.confirm(`Are you sure you want to override this key in Palmier-Ocean ? (if this key already exist, it'll be overwritten)`, function(result) {
+    bootbox.confirm(`Are you sure you want to override this key in Palmier-Ocean ? (if this key already exist, it'll be overwritten)`, function(
+      result,
+    ) {
       if (result === true) {
         $.ajax({
           type: 'POST',
