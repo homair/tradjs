@@ -60,6 +60,18 @@ const config = {
         label: 'French',
         order: 0,
       },
+      de: {
+        label: 'German',
+        order: 2,
+      },
+      es: {
+        label: 'Spanish',
+        order: 3,
+      },
+      nl: {
+        label: 'Dutch',
+        order: 5,
+      },
     },
     assetregister: {
       en_GB: {
@@ -76,7 +88,7 @@ const config = {
   lang_order: {
     // Multi-databases:
     default: ['fr', 'en', 'de', 'es', 'it', 'nl', 'pl'],
-    palmierocean: ['fr'],
+    palmierocean: ['fr', 'de', 'es', 'nl'],
     assetregister: ['en_GB' /*, 'fr'*/],
   },
   flat_collection: true, // process.env.FLAT_COLLECTION === 'true', // ### => false | true
