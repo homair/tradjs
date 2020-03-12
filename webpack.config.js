@@ -47,7 +47,7 @@ const coreConfig = merge(
 const devConfig = () =>
   merge.smart(
     coreConfig,
-    parts.dashboard(),
+    //parts.dashboard(),
     // parts.devServer({ port: 3004 }),
     parts.loadCSS({ modules: false }),
     parts.loadSASS({ modules: false }),

@@ -15,8 +15,9 @@ block content
         .modal-footer
           button.btn.btn-primary(data-dismiss="modal")="Save and close"
           if currentDb === 'default'
-            button.btn.btn-secondary.overridePO="Override in Palmier-Ocean"
-            .info.collapse
+            button.btn.btn-secondary.jqOverrideBt(data-brand='PO') Override in PO
+            button.btn.btn-secondary.jqOverrideBt(data-brand='MRV') Override in MRV
+            //-.info.collapse
   center
     .wrapper
       table#tab_logic.table.table-bordered(data-regroup=(display === 'flat' ? 0 : 1))
@@ -29,17 +30,18 @@ block content
             th.
 
         tbody
+          //- each translations keys (rows)
           each valTab in results
             - const isAtLeastOneOverridden = valTab.isOverridden
             tr.line(id='row_' + valTab.key, data-key= valTab.key, class=(isAtLeastOneOverridden ? 'overridden':''))
               th.modTrig
-                span.key(id= valTab._id, data-key=valTab.key, title=(isAtLeastOneOverridden ? 'Surdéfini pour PO' : ''))= valTab.key.substr(5)
+                span.key(id= valTab._id, data-key=valTab.key, title=(isAtLeastOneOverridden ? 'Overridden for PO or MRV' : ''))= valTab.key.substr(5)
 
               each lang, keyLang in listeLang
-                - const translation = valTab.translations[keyLang]
-                - const isOverridden = translation ? translation.isOverridden : false
+                - const translation = valTab.translations[keyLang] || {}
+                - const isOverridden = translation ? translation.isOverriddenPO || translation.isOverriddenMRV : false
                 td.modTrig(data-lang=keyLang, class=(isOverridden ? 'overridden':''))
-                  textarea.form-control(data-id= translation ? translation._id : '', data-key= valTab.key, data-lang=keyLang, rows=1, class=(isOverridden ? 'overridden':''))= translation ? translation.value : ''
+                  textarea.form-control(data-id= translation ? translation._id : '', data-key= valTab.key, data-lang=keyLang, data-isoverrpo= translation.isOverriddenPO ? '1' : '0', data-isoverrmrv= translation.isOverriddenMRV ? '1' : '0', rows=1, class=(isOverridden ? 'overridden':''))= translation ? translation.value : ''
 
               td
                 button.closed(id='btn_' + valTab.key, type='button', value='Supprimer', data-inputkey= valTab.key, data-dismiss='alert', data-confirm='confirmation')

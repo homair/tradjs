@@ -18,7 +18,7 @@
     "dev": "webpack --watch --progress --config webpack.config.js",
     "heroku-postbuild": "webpack",
     "test": "NODE_ENV=test mocha",
-    "start": "node boot.js",
+    "start": "nodemon boot.js",
     "server": "NODE_ENV=dev PORT=3006 nodemon boot.js"
   },
   "babel": {
@@ -52,7 +52,8 @@
     "test"
   ],
   "engines": {
-    "node": "10.x"
+    "node": "12.x",
+    "npm": "6.x"
   },
   "dependencies": {
     "@babel/cli": "7.0.x",
@@ -94,23 +95,23 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "floatthead": "^2.1.2",
     "font-awesome": "^4.7.0",
+    "fsevents": "^2.1.2",
     "hard-source-webpack-plugin": "^0.12.0",
     "jquery": "^3.3.1",
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.4.5",
     "mongodb": "^3.1.10",
     "morgan": "^1.9.1",
-    "node-sass": "^4.10.0",
+    "node-sass": "^4.13.1",
     "plugin": "^0.3.3",
     "popper.js": "^1.14.6",
     "postcss-cssnext": "^3.1.0",
     "postcss-loader": "^3.0.0",
     "pug": "^2.0.3",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "^7.3.1",
     "style-loader": "^0.23.1",
     "tether": "^1.4.5",
     "webpack": "^4.27.1",
-    "webpack-dashboard": "^2.0.0",
     "winston": "^3.1.0"
   },
   "devDependencies": {

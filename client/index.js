@@ -27,10 +27,20 @@ $(document).ready(function() {
     $('.modal-title').html(`Key : ${$tr.data('key')}`)
     $tr.find('textarea').each(function() {
       const lang = $(this).data('lang')
+      const isOverrPO = $(this).data('isoverrpo') == '1'
+      const isOverrMRV = $(this).data('isoverrmrv') == '1'
+
+      if (isOverrPO) {
+        switchButton($('button.jqOverrideBt[data-brand="PO"]'), 'PO')
+      }
+      if (isOverrMRV) {
+        switchButton($('button.jqOverrideBt[data-brand="MRV"]'), 'MRV')
+      }
+      console.log(isOverrMRV, isOverrPO)
       $(`.modal-body .form-group[data-lang="${lang}"] .input-group`).append($(this))
     })
     // store the key on action buttons
-    $('button.overridePO').attr('data-key', $tr.data('key'))
+    $('button.jqOverrideBt').attr('data-key', $tr.data('key'))
   })
   $('#myModal').on('shown.bs.modal', function() {
     $('textarea', $(this))[0].select()
@@ -102,20 +112,31 @@ $(document).ready(function() {
     })
   })
 
+  function switchButton(bt, brand) {
+    bt.removeClass('jqOverrideBt')
+      .text(`See in ${brand}`)
+      .off('click')
+      .on('click', function() {
+        window.location.href = `${window.location.origin}/switch-db?db=${brand.toLowerCase()}${
+          location.search ? location.search.replace('?', '&') : ''
+        }`
+      })
+  }
+
   // -----------------------------------------------------------------------------
   // Override a key from default namespace to PalmierOcean
   // -----------------------------------------------------------------------------
-  $('button.overridePO').on('click', function(e) {
-    const key = $(this).data('key')
+  $('button.jqOverrideBt').on('click', function(e) {
+    const bt = $(this)
+    const key = bt.data('key')
+    const brand = bt.data('brand')
     const footerHtml = $('.modal-footer').html() // save modal footer state
-    bootbox.confirm(`Are you sure you want to override this key in Palmier-Ocean ? (if this key already exist, it'll be overwritten)`, function(
-      result,
-    ) {
+    bootbox.confirm(`Are you sure you want to override this key in ${brand} ? (if this key already exists, it'll be overwritten)`, function(result) {
       if (result === true) {
         $.ajax({
           type: 'POST',
           url: `${window.location.origin}/duplicate`,
-          data: { key: key },
+          data: { key: key, brand: brand },
           timeout: 3000,
           success: function(data) {
             if (data === 'ok') {
@@ -127,18 +148,11 @@ $(document).ready(function() {
               })
               // information
               $('.modal-footer .info')
-                .html(`Key <strong>${key}</strong> successfully duplicated in Palmier-Ocean.`)
+                .html(`Key <strong>${key}</strong> successfully duplicated in ${brand}.`)
                 .show()
+
               // easy access to PO view
-              $('button.overridePO')
-                .removeClass('overridePO')
-                .text('See in Palmier-Ocean')
-                .off('click')
-                .on('click', function() {
-                  window.location.href = `${window.location.origin}/switch-db?db=palmierocean${
-                    location.search ? location.search.replace('?', '&') : ''
-                  }`
-                })
+              switchButton(bt, brand)
             }
           },
           error: function(err) {

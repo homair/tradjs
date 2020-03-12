@@ -1,4 +1,4 @@
-import { getDb, DB_PO } from '../lib/mongodb_util'
+import { getDb, DB_PO, DB_MRV, DB_DEFAULT } from '../lib/mongodb_util'
 import MongoDB from 'mongodb'
 import _ from 'lodash'
 import config from '../config/'
@@ -92,10 +92,18 @@ export function getRegularOrderedDocs(dbKey, langs, callback) {
 export function getFlatOrderedDocs(dbKey, langs, callback) {
   const hrstart = process.hrtime()
 
+  const overridableNS = [config.db[DB_PO].translationNamespace, config.db[DB_MRV].translationNamespace]
+
+  let namespaces = [config.db[dbKey].translationNamespace]
+
+  if (dbKey == DB_DEFAULT) {
+    namespaces = namespaces.concat(overridableNS)
+  }
+
   const filters = {
     language: { $in: [...Object.keys(langs)] },
     // On recup le namespace courant et PO (pour afficher des flags 'overriden')
-    namespace: { $in: [config.db[dbKey].translationNamespace, config.db[DB_PO].translationNamespace] },
+    namespace: { $in: namespaces },
     //DEBUG: key: 'data.common.labels.logo.link_href_logo_secondaire',
   }
 
@@ -146,14 +154,15 @@ export function getFlatOrderedDocs(dbKey, langs, callback) {
           curr = { key: el.key, translations: {} }
 
           const isOverridden = {}
+          overridableNS.map(ns => (isOverridden[ns] = {}))
 
           // console.log('VALUES=', el.values)
 
           const newValues = []
           el.values.forEach(v => {
             // On regarde dans le namespace PO si overriden (uniquement si Homair).
-            if (dbKey == 'default' && v.namespace == config.db[DB_PO].translationNamespace) {
-              isOverridden[v.lang] = true
+            if (dbKey == 'default' && overridableNS.indexOf(v.namespace) !== -1) {
+              isOverridden[v.namespace][v.lang] = true
             } else {
               // on stocke le namespace courant uniquement
               newValues.push(v)
@@ -168,13 +177,17 @@ export function getFlatOrderedDocs(dbKey, langs, callback) {
           // store values in order
           config.lang_order[dbKey].forEach(lang => {
             if (oValues[lang] && oValues[lang].value) {
+              const isOverrPO = isOverridden[config.db[DB_PO].translationNamespace][lang]
+              const isOverrMRV = isOverridden[config.db[DB_MRV].translationNamespace][lang]
+
               curr.translations[lang] = {
                 ...oValues[lang],
-                isOverridden: isOverridden[lang],
+                isOverriddenPO: isOverrPO,
+                isOverriddenMRV: isOverrMRV,
               }
 
               // Si au moins une langue overriden, marquer la ligne.
-              if (isOverridden[lang]) {
+              if (isOverrPO || isOverrMRV) {
                 curr.isOverridden = true
               }
             }
@@ -316,26 +329,31 @@ export function duplicateToPalmierRoute(req, res) {
   if (config.flat_collection === true) {
     // get FR value (as it's only in FR for now)
     let where = { language: 'fr', namespace: config.db[dbKey].translationNamespace, key: req.body.key }
-    getDb(dbKey)
-      .collection(config.db.root_collection)
-      .findOne(where, (err, result) => {
-        if (err || !result) {
-          logger.error(`duplicateToPalmierRoute: ${err ? `err=${err}` : 'key not found / result is empty'}`, { err })
-          return res.status(500).send(err)
-        }
+    const collection = getDb(dbKey).collection(config.db.root_collection)
+    collection.findOne(where, (err, result) => {
+      if (err || !result) {
+        logger.error(`duplicateToPalmierRoute: ${err ? `err=${err}` : 'key not found / result is empty'}`, { err })
+        return res.status(500).send(err)
+      }
 
-        // insert key and value insite Palmier Ocean namespace
-        where.namespace = config.db[DB_PO].translationNamespace
-        getDb(DB_PO)
-          .collection(config.db.root_collection)
-          .updateOne(where, { $set: { data: String(result.data) } }, { upsert: true }, (err, result) => {
-            if (err) {
-              logger.error(`duplicateToPalmierRoute: err="${err}"`, { err })
-              return res.status(500).send(err)
-            }
-            res.send('ok')
-          })
-      })
+      const targetBrand = req.body.brand.toLowerCase()
+
+      console.log('####################', targetBrand)
+      // insert key and value inside Palmier Ocean namespace
+      if (config.db[targetBrand]) {
+        where.namespace = config.db[targetBrand].translationNamespace
+
+        collection.updateOne(where, { $set: { data: String(result.data) } }, { upsert: true }, (err, result) => {
+          if (err) {
+            logger.error(`duplicateToPalmierRoute: err="${err}"`, { err })
+            return res.status(500).send(err)
+          }
+          res.send('ok')
+        })
+      } else {
+        res.status(500).send(`${targetBrand} brand not found.`)
+      }
+    })
   } else {
     res.status(500).send('i18n "object" collection not handled')
   }

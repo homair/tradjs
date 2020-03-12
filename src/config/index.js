@@ -8,10 +8,11 @@ const config = {
       dbname: process.env.MONGODB_NAME || 'honodblive',
       translationNamespace: 'translation',
     },
-    palmierocean: {
-      uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/honodblive',
-      dbname: process.env.MONGODB_NAME || 'honodblive',
+    po: {
       translationNamespace: 'palmier-ocean',
+    },
+    mrv: {
+      translationNamespace: 'mrv',
     },
     assetregister: {
       uri: process.env.MONGODB_URI_ASSETREGISTER || 'mongodb://localhost:27017/basemh',
@@ -55,7 +56,7 @@ const config = {
         order: 6,
       },
     },
-    palmierocean: {
+    po: {
       fr: {
         label: 'French',
         order: 0,
@@ -73,6 +74,12 @@ const config = {
         order: 5,
       },
     },
+    mrv: {
+      fr: {
+        label: 'French',
+        order: 0,
+      },
+    },
     assetregister: {
       en_GB: {
         label: 'English',
@@ -88,7 +95,8 @@ const config = {
   lang_order: {
     // Multi-databases:
     default: ['fr', 'en', 'de', 'es', 'it', 'nl', 'pl'],
-    palmierocean: ['fr', 'de', 'es', 'nl'],
+    po: ['fr', 'de', 'es', 'nl'],
+    mrv: ['fr'],
     assetregister: ['en_GB' /*, 'fr'*/],
   },
   flat_collection: true, // process.env.FLAT_COLLECTION === 'true', // ### => false | true

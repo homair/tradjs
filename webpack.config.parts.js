@@ -168,10 +168,10 @@ exports.cleanDist = (paths, options) => {
   return { plugins: [new CleanWebpackPlugin(paths, options)] }
 }
 
-exports.dashboard = options => {
-  const WebpackDashboardPlugin = require('webpack-dashboard/plugin')
-  return { plugins: [new WebpackDashboardPlugin(options)] }
-}
+// exports.dashboard = options => {
+//   const WebpackDashboardPlugin = require('webpack-dashboard/plugin')
+//   return { plugins: [new WebpackDashboardPlugin(options)] }
+// }
 
 exports.devServer = ({ contentBase, hot = true, https, open, port, proxy } = {}) => {
   const devServer = {

@@ -30,18 +30,10 @@ dbConnect(DB_DEFAULT, err => {
     }
     logger.info('✔ Connection established to '.green + DB_AR.cyan + ' database'.green)
 
-    dbConnect(DB_PO, err => {
-      if (err) {
-        logger.error(err)
-        process.exit(-1)
-      }
-      logger.info('✔ Connection established to '.green + DB_PO.cyan + ' database'.green)
-
-      // Lancement effectif du serveur en écoutant sur le bon port pour des
-      // connexions HTTP entrantes.  Le port par défaut est 3000 (voir plus haut).
-      server.listen(app.get('port'), () => {
-        logger.info(`✔ Server listening on ${('http://localhost:' + app.get('port')).yellow}`)
-      })
+    // Lancement effectif du serveur en écoutant sur le bon port pour des
+    // connexions HTTP entrantes.  Le port par défaut est 3000 (voir plus haut).
+    server.listen(app.get('port'), () => {
+      logger.info(`✔ Server listening on ${('http://localhost:' + app.get('port')).yellow}`)
     })
   })
 })

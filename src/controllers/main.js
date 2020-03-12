@@ -5,7 +5,7 @@ import config from '../config/'
 import 'colors'
 import logger from '../lib/customLogger'
 import { getOrderedDocs, updateRoute, deleteRoute, duplicateToPalmierRoute } from '../lib/manageDocs'
-import { DB_AR, DB_PO, DB_DEFAULT } from '../lib/mongodb_util'
+import { DB_AR, DB_PO, DB_DEFAULT, DB_MRV } from '../lib/mongodb_util'
 
 const router = new Router()
 
@@ -90,7 +90,7 @@ router.get('/doc_by_language/:lang', (req, res) => {
 })
 
 router.get('/switch-db', (req, res) => {
-  if ([DB_AR, DB_PO, DB_DEFAULT].indexOf(req.query.db) !== -1) {
+  if ([DB_AR, DB_PO, DB_MRV, DB_DEFAULT].indexOf(req.query.db) !== -1) {
     req.session.currentDb = req.query.db
     const suffix = req.query.v ? '?v=flat' : ''
     return res.redirect(`/${suffix}`)
