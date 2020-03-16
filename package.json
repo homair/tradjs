@@ -18,7 +18,7 @@
     "dev": "webpack --watch --progress --config webpack.config.js",
     "heroku-postbuild": "webpack",
     "test": "NODE_ENV=test mocha",
-    "start": "nodemon boot.js",
+    "start": "node boot.js",
     "server": "NODE_ENV=dev PORT=3006 nodemon boot.js",
     "install-mac": "npm i fsevents"
   },
