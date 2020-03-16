@@ -22,23 +22,37 @@ $(document).ready(function() {
   $('.modTrig').on('click', function() {
     const $tr = $(this).closest('tr.line')
     editedId = $tr.attr('id')
+    const key = $tr.data('key')
 
     $('#myModal').modal('show')
-    $('.modal-title').html(`Key : ${$tr.data('key')}`)
+    $('.modal-title').html(`Key : ${key}`)
+
+    let onePOOverriden = false
+    let oneMRVOverriden = false
     $tr.find('textarea').each(function() {
       const lang = $(this).data('lang')
       const isOverrPO = $(this).data('isoverrpo') == '1'
       const isOverrMRV = $(this).data('isoverrmrv') == '1'
 
-      if (isOverrPO) {
-        switchButton($('button.jqOverrideBt[data-brand="PO"]'), 'PO')
-      }
-      if (isOverrMRV) {
-        switchButton($('button.jqOverrideBt[data-brand="MRV"]'), 'MRV')
-      }
-      console.log(isOverrMRV, isOverrPO)
+      if (isOverrPO) onePOOverriden = true
+      if (isOverrMRV) oneMRVOverriden = true
+
       $(`.modal-body .form-group[data-lang="${lang}"] .input-group`).append($(this))
     })
+
+    console.log(`key=${key}, isOverrPO=${$(this).data('isoverrpo')}, isOverrMRV=${$(this).data('isoverrmrv')}`)
+    if (onePOOverriden) {
+      switchButton($('button.jqOverrideBt[data-brand="PO"]'), 'PO', 'view')
+    } else {
+      switchButton($('button.jqOverrideBt[data-brand="PO"]'), 'PO', 'override')
+    }
+
+    if (oneMRVOverriden) {
+      switchButton($('button.jqOverrideBt[data-brand="MRV"]'), 'MRV', 'view')
+    } else {
+      switchButton($('button.jqOverrideBt[data-brand="MRV"]'), 'MRV', 'override')
+    }
+
     // store the key on action buttons
     $('button.jqOverrideBt').attr('data-key', $tr.data('key'))
   })
@@ -92,7 +106,7 @@ $(document).ready(function() {
   // ----------------------------------------------------------------------------------
   $('button[data-confirm="confirmation"]').on('click', function() {
     const key = $(this).data('inputkey')
-    bootbox.confirm('Etes vous sûr de vouloir supprimer cette ligne?', function(result) {
+    bootbox.confirm(`Are you sure you want to remove this key (${key}) ?`, function(result) {
       if (result === true) {
         $.ajax({
           type: 'DELETE',
@@ -112,15 +126,17 @@ $(document).ready(function() {
     })
   })
 
-  function switchButton(bt, brand) {
-    bt.removeClass('jqOverrideBt')
-      .text(`See in ${brand}`)
-      .off('click')
-      .on('click', function() {
-        window.location.href = `${window.location.origin}/switch-db?db=${brand.toLowerCase()}${
-          location.search ? location.search.replace('?', '&') : ''
-        }`
-      })
+  function switchButton(bt, brand, mode) {
+    bt
+      // .removeClass('jqOverrideBt')
+      .data('viewmode', mode == 'view' ? '1' : '0')
+      .text(mode == 'view' ? `See in ${brand}` : `Override in ${brand}`)
+    // .off('click')
+    // .on('click', function() {
+    //   window.location.href = `${window.location.origin}/switch-db?db=${brand.toLowerCase()}${
+    //     location.search ? location.search.replace('?', '&') : ''
+    //   }`
+    // })
   }
 
   // -----------------------------------------------------------------------------
@@ -130,37 +146,49 @@ $(document).ready(function() {
     const bt = $(this)
     const key = bt.data('key')
     const brand = bt.data('brand')
-    const footerHtml = $('.modal-footer').html() // save modal footer state
-    bootbox.confirm(`Are you sure you want to override this key in ${brand} ? (if this key already exists, it'll be overwritten)`, function(result) {
-      if (result === true) {
-        $.ajax({
-          type: 'POST',
-          url: `${window.location.origin}/duplicate`,
-          data: { key: key, brand: brand },
-          timeout: 3000,
-          success: function(data) {
-            if (data === 'ok') {
-              // bind restore footer state on "save & close" button
-              $('.modal-footer button.btn-primary').on('click', function() {
-                setTimeout(function() {
-                  $('.modal-footer').html(footerHtml)
-                }, 0) // will be played right after callback stack
-              })
-              // information
-              $('.modal-footer .info')
-                .html(`Key <strong>${key}</strong> successfully duplicated in ${brand}.`)
-                .show()
+    const viewMode = bt.data('viewmode')
 
-              // easy access to PO view
-              switchButton(bt, brand)
-            }
-          },
-          error: function(err) {
-            bootbox.alert(`Error while duplicating data : ${err.statusText} [status=${err.status}]`)
-          },
-        })
-      }
-    })
+    console.log(`key=${key}, brand=${brand}, viewMode=${viewMode}`)
+
+    if (viewMode == '1') {
+      window.location.href = `${window.location.origin}/switch-db?db=${brand.toLowerCase()}${
+        location.search ? location.search.replace('?', '&') : ''
+      }`
+    } else {
+      const footerHtml = $('.modal-footer').html() // save modal footer state
+      bootbox.confirm(`Are you sure you want to override this key in ${brand} ? (if this key already exists, it'll be overwritten)`, function(
+        result,
+      ) {
+        if (result === true) {
+          $.ajax({
+            type: 'POST',
+            url: `${window.location.origin}/duplicate`,
+            data: { key: key, brand: brand },
+            timeout: 3000,
+            success: function(data) {
+              if (data === 'ok') {
+                // bind restore footer state on "save & close" button
+                $('.modal-footer button.btn-primary').on('click', function() {
+                  setTimeout(function() {
+                    $('.modal-footer').html(footerHtml)
+                  }, 0) // will be played right after callback stack
+                })
+                // information
+                $('.modal-footer .info')
+                  .html(`Key <strong>${key}</strong> successfully duplicated in ${brand}.`)
+                  .show()
+
+                // easy access to PO view
+                switchButton(bt, brand, 'view')
+              }
+            },
+            error: function(err) {
+              bootbox.alert(`Error while duplicating data : ${err.statusText} [status=${err.status}]`)
+            },
+          })
+        }
+      })
+    }
   })
 
   // -------------------------------------------------------------------------------
