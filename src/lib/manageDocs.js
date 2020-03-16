@@ -338,16 +338,22 @@ export function duplicateToPalmierRoute(req, res) {
 
       const targetBrand = req.body.brand.toLowerCase()
 
-      console.log('####################', targetBrand)
-      // insert key and value inside Palmier Ocean namespace
+      // insert key and value inside other brand namespace
       if (config.db[targetBrand]) {
         where.namespace = config.db[targetBrand].translationNamespace
 
-        collection.updateOne(where, { $set: { data: String(result.data) } }, { upsert: true }, (err, result) => {
+        console.log('####################', targetBrand, where, 'result=', result)
+        collection.updateOne(where, { $set: { data: String(result.data) } }, { upsert: true }, (err, updateResult) => {
           if (err) {
             logger.error(`duplicateToPalmierRoute: err="${err}"`, { err })
             return res.status(500).send(err)
           }
+
+          logger.info(
+            `duplicateToPalmierRoute: ${req.body.key} done ! updateResult=${JSON.stringify(updateResult)} data=${JSON.stringify(result.data)}`,
+            { err },
+          )
+
           res.send('ok')
         })
       } else {

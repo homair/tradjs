@@ -27,6 +27,11 @@ $(document).ready(function() {
     $('#myModal').modal('show')
     $('.modal-title').html(`Key : ${key}`)
 
+    // store the key on action buttons
+    $('button.jqOverrideBt')
+      .attr('data-key', key)
+      .data('key', key)
+
     let onePOOverriden = false
     let oneMRVOverriden = false
     $tr.find('textarea').each(function() {
@@ -40,7 +45,8 @@ $(document).ready(function() {
       $(`.modal-body .form-group[data-lang="${lang}"] .input-group`).append($(this))
     })
 
-    console.log(`key=${key}, isOverrPO=${$(this).data('isoverrpo')}, isOverrMRV=${$(this).data('isoverrmrv')}`)
+    console.log(`key=${key}, onePOOverriden=${onePOOverriden}, oneMRVOverriden=${oneMRVOverriden}`)
+
     if (onePOOverriden) {
       switchButton($('button.jqOverrideBt[data-brand="PO"]'), 'PO', 'view')
     } else {
@@ -52,9 +58,6 @@ $(document).ready(function() {
     } else {
       switchButton($('button.jqOverrideBt[data-brand="MRV"]'), 'MRV', 'override')
     }
-
-    // store the key on action buttons
-    $('button.jqOverrideBt').attr('data-key', $tr.data('key'))
   })
   $('#myModal').on('shown.bs.modal', function() {
     $('textarea', $(this))[0].select()
@@ -127,9 +130,8 @@ $(document).ready(function() {
   })
 
   function switchButton(bt, brand, mode) {
-    bt
-      // .removeClass('jqOverrideBt')
-      .data('viewmode', mode == 'view' ? '1' : '0')
+    bt.data('viewmode', mode == 'view' ? '1' : '0')
+      .attr('data-viewmode', mode == 'view' ? '1' : '0')
       .text(mode == 'view' ? `See in ${brand}` : `Override in ${brand}`)
     // .off('click')
     // .on('click', function() {
