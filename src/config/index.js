@@ -61,6 +61,10 @@ const config = {
         label: 'French',
         order: 0,
       },
+      en: {
+        label: 'English',
+        order: 1,
+      },
       de: {
         label: 'German',
         order: 2,
@@ -78,6 +82,22 @@ const config = {
       fr: {
         label: 'French',
         order: 0,
+      },
+      en: {
+        label: 'English',
+        order: 1,
+      },
+      de: {
+        label: 'German',
+        order: 2,
+      },
+      es: {
+        label: 'Spanish',
+        order: 3,
+      },
+      nl: {
+        label: 'Dutch',
+        order: 5,
       },
     },
     assetregister: {
