@@ -73,6 +73,10 @@ const config = {
         label: 'Spanish',
         order: 3,
       },
+      it: {
+        label: 'Italien',
+        order: 4,
+      },
       nl: {
         label: 'Dutch',
         order: 5,
@@ -98,6 +102,10 @@ const config = {
       nl: {
         label: 'Dutch',
         order: 5,
+      },
+      pl: {
+        label: 'Polish',
+        order: 6,
       },
     },
     assetregister: {
